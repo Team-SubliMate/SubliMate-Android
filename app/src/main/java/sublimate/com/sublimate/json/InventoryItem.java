@@ -1,5 +1,6 @@
 package sublimate.com.sublimate.json;
 
+// TODO: Make serializable for gson
 public class InventoryItem {
     private String itemName;
 

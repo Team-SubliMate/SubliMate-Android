@@ -4,4 +4,9 @@
 
     <!-- Errors -->
     <string name="error_message">Oops, something went wrong!</string>
+
+    <!-- Manual Add Dialog -->
+    <string name="add_dialog_title">Manual Inventory Update</string>
+    <string name="add_dialog_item_name">Item Name: </string>
+    <string name="add_dialog_add_item">Add</string>
 </resources>
