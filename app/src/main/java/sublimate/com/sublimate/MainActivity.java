@@ -3,10 +3,10 @@ package sublimate.com.sublimate;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,21 +16,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import sublimate.com.sublimate.json.InventoryItem;
+import sublimate.com.sublimate.json.InventoryServiceResponse;
+import sublimate.com.sublimate.retrofit.InventoryService;
 import sublimate.com.sublimate.view.InventoryAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView inventoryRecyclerView;
     private InventoryAdapter inventoryAdapter;
-
     private ProgressBar loadingSpinner;
     private TextView errorTextView;
-
     private FloatingActionButton inventoryActionButton;
     private Toast toast;
-
     private Dialog manualAddDialog;
+
+    private Callback<InventoryServiceResponse> inventoryCallback;
+    private InventoryService inventoryService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,23 @@ public class MainActivity extends AppCompatActivity {
         inventoryRecyclerView.setLayoutManager(layoutManager);
         inventoryRecyclerView.setAdapter(inventoryAdapter);
 
+        // Inventory Service HTTP
+        inventoryService = InventoryService.getInventoryService();
+
+        inventoryCallback = new Callback<InventoryServiceResponse>() {
+            @Override
+            public void onResponse(Call<InventoryServiceResponse> call, Response<InventoryServiceResponse> response) {
+                InventoryServiceResponse inventoryResponse = response.body();
+
+                System.out.println(inventoryResponse);
+                showContent();
+            }
+
+            @Override
+            public void onFailure(Call<InventoryServiceResponse> call, Throwable t) {
+                Log.d("HTTP Response Failure: ", t.toString());
+            }
+        };
 
         mock(); // Testing!!!!!!!
 
@@ -128,8 +152,6 @@ public class MainActivity extends AppCompatActivity {
 
     // TESTING
     private void mock() {
-        // showContent();
-
         /*for (int i = 1; i <= 9; i++) {
             InventoryItem item = new InventoryItem("Item " + i);
             inventoryAdapter.addInventoryItem(item);
@@ -142,5 +164,13 @@ public class MainActivity extends AppCompatActivity {
                 showManualAddDialog();
             }
         });
+
+        Call<InventoryServiceResponse> call = null;
+        try {
+            call = inventoryService.getInventoryCall();
+            call.enqueue(inventoryCallback);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

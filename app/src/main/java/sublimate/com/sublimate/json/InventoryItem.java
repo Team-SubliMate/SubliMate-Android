@@ -1,12 +1,13 @@
 package sublimate.com.sublimate.json;
 
-// TODO: Make serializable for gson
+import com.google.gson.annotations.SerializedName;
+
 public class InventoryItem {
+    @SerializedName("name")
     private String itemName;
 
-    // no-args constructor
     public InventoryItem() {
-
+        // no args
     }
 
     public InventoryItem(String itemName) {
