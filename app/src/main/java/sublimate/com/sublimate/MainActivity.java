@@ -18,15 +18,20 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import sublimate.com.sublimate.json.InventoryItem;
 import sublimate.com.sublimate.json.InventoryServiceResponse;
-import sublimate.com.sublimate.retrofit.InventoryService;
+import sublimate.com.sublimate.network.InventoryService;
+import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    public static String WEBSOCKET_URL = "wss://echo.websocket.org";
 
     private RecyclerView inventoryRecyclerView;
     private InventoryAdapter inventoryAdapter;
@@ -38,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Callback<InventoryServiceResponse> inventoryCallback;
     private InventoryService inventoryService;
+    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<InventoryServiceResponse> call, Response<InventoryServiceResponse> response) {
                 InventoryServiceResponse inventoryResponse = response.body();
 
-                System.out.println(inventoryResponse);
                 showContent();
             }
 
@@ -74,7 +79,16 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        // Set up WS
+        client = new OkHttpClient();
+        Request request = new Request.Builder().url(WEBSOCKET_URL).build();
+        WebSocketEventListener listener = new WebSocketEventListener();
+        WebSocket ws = client.newWebSocket(request, listener);
+
+        client.dispatcher().executorService().shutdown();
+
         mock(); // Testing!!!!!!!
+
 
     }
 

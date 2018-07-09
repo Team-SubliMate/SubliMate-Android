@@ -1,4 +1,4 @@
-package sublimate.com.sublimate.retrofit;
+package sublimate.com.sublimate.network;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

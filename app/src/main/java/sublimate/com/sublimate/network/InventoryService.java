@@ -1,4 +1,4 @@
-package sublimate.com.sublimate.retrofit;
+package sublimate.com.sublimate.network;
 
 import java.io.IOException;
 
