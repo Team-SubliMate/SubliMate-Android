@@ -6,8 +6,8 @@ import retrofit2.http.Path;
 import sublimate.com.sublimate.json.InventoryServiceResponse;
 
 public interface InventoryServiceInterface {
-    @GET("api/{fridgeId}/inventoryItems.json")
-    Call<InventoryServiceResponse> getItems(@Path("fridgeId") int fridgeId);
+    @GET("api/inventory")
+    Call<InventoryServiceResponse> getInventory();
 
     @GET("get")
     Call<InventoryServiceResponse> get();

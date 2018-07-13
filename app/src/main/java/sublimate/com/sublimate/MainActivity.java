@@ -31,7 +31,7 @@ import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
 
 public class MainActivity extends AppCompatActivity {
-    public static String WEBSOCKET_URL = "wss://echo.websocket.org";
+    public static String WEBSOCKET_URL = "ws://echo.websocket.org";
 
     private RecyclerView inventoryRecyclerView;
     private InventoryAdapter inventoryAdapter;
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<InventoryServiceResponse> call, Response<InventoryServiceResponse> response) {
                 InventoryServiceResponse inventoryResponse = response.body();
 
+                System.out.println(inventoryResponse);
                 showContent();
             }
 
@@ -88,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
         client.dispatcher().executorService().shutdown();
 
         mock(); // Testing!!!!!!!
-
-
     }
 
     @Override

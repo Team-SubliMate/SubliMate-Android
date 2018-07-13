@@ -12,7 +12,8 @@ public class InventoryService {
 
     private static InventoryService inventoryService;
 
-    private static String BASE_URL = "https://httpbin.org";
+    // This doesn't work on the Android Emulator because it'll refer to the loopback address on the EMULATOR. Use http://10.0.2.2:3000 on the emulator instead.
+    private static String BASE_URL = "http://localhost:3000";
 
     private Retrofit retrofit;
 
@@ -33,7 +34,7 @@ public class InventoryService {
 
     public Call<InventoryServiceResponse> getInventoryCall() throws IOException {
         InventoryServiceInterface inventoryService = retrofit.create(InventoryServiceInterface.class);
-        Call<InventoryServiceResponse> call = inventoryService.get();
+        Call<InventoryServiceResponse> call = inventoryService.getInventory();
 
         return call;
     }
