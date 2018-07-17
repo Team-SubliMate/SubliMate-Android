@@ -19,7 +19,7 @@ public class InventoryItem {
     private int quantity;
 
     public InventoryItem() {
-        // no args
+        // Empty constructor for serialization purposes (DO NOT REMOVE)
     }
 
     public InventoryItem(String name) {

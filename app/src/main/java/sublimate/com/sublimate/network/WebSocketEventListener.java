@@ -8,6 +8,7 @@ import okhttp3.WebSocketListener;
 import okio.ByteString;
 
 public class WebSocketEventListener extends WebSocketListener {
+    public static String WEBSOCKET_URL = "ws://10.0.2.2:8090";
     public static final int NORMAL_CLOSURE_STATUS = 1000;
 
     public static final String TAG = WebSocketEventListener.class.getSimpleName();
@@ -20,6 +21,7 @@ public class WebSocketEventListener extends WebSocketListener {
      * messages.
      */
     public void onOpen(WebSocket webSocket, Response response) {
+        Log.d(TAG, "Socket opened.");
         webSocket.send("{\"type\": \"NEW_CLIENT\", \"value\": \"android\"}");
         //webSocket.close(NORMAL_CLOSURE_STATUS, "nothing to do");
     }

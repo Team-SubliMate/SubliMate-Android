@@ -9,7 +9,7 @@ public class InventoryServiceResponse {
     private List<InventoryItem> items;
 
     public InventoryServiceResponse() {
-        // no args
+        // Empty constructor for serialization purposes (DO NOT REMOVE)
     }
 
     public List<InventoryItem> getItems() {

@@ -16,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -26,13 +28,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import sublimate.com.sublimate.json.InventoryItem;
 import sublimate.com.sublimate.json.InventoryServiceResponse;
+import sublimate.com.sublimate.json.ManualEntry;
 import sublimate.com.sublimate.network.InventoryService;
 import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
 
 public class MainActivity extends AppCompatActivity {
-    public static String WEBSOCKET_URL = "ws://192.168.0.134:8090";
-
     private RecyclerView inventoryRecyclerView;
     private InventoryAdapter inventoryAdapter;
     private ProgressBar loadingSpinner;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         initHTTP();
         initWS();
 
-        mock(); // Testing!!!!!!!
+        getItems();
     }
 
     @Override
@@ -80,6 +81,14 @@ public class MainActivity extends AppCompatActivity {
         inventoryRecyclerView.setHasFixedSize(true);
         inventoryRecyclerView.setLayoutManager(layoutManager);
         inventoryRecyclerView.setAdapter(inventoryAdapter);
+
+        inventoryActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showContent();
+                showManualAddDialog();
+            }
+        });
     }
 
     private void initHTTP() {
@@ -91,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<InventoryServiceResponse> call, Response<InventoryServiceResponse> response) {
                 InventoryServiceResponse inventoryResponse = response.body();
 
-                System.out.println(inventoryResponse);
+                inventoryAdapter.setInventoryItems(inventoryResponse.getItems());
                 showContent();
             }
 
@@ -104,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initWS() {
         // Set up WS
-        Request request = new Request.Builder().url(WEBSOCKET_URL).build();
+        Request request = new Request.Builder().url(WebSocketEventListener.WEBSOCKET_URL).build();
         WebSocketEventListener listener = new WebSocketEventListener();
 
         client = new OkHttpClient();
@@ -159,11 +168,21 @@ public class MainActivity extends AppCompatActivity {
             dialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // Create item from user entry
                     String itemText = dialogEditText.getText().toString();
                     InventoryItem item = new InventoryItem(itemText);
 
+                    // UI
                     inventoryAdapter.addInventoryItem(item);
                     showToast("The item \"" + item.getName() + "\" has been added.");
+
+                    // Send to backend
+                    Gson gson = new Gson();
+                    ManualEntry manualEntry = new ManualEntry(item);
+                    String itemJson = gson.toJson(manualEntry, ManualEntry.class);
+                    webSocket.send(itemJson);
+                    Log.d(WebSocketEventListener.TAG, "Manual entry sent.");
+
                     manualAddDialog.dismiss();
                 }
             });
@@ -174,22 +193,8 @@ public class MainActivity extends AppCompatActivity {
         manualAddDialog.show();
     }
 
-    // TESTING
-    private void mock() {
-        /*for (int i = 1; i <= 9; i++) {
-            InventoryItem item = new InventoryItem("Item " + i);
-            inventoryAdapter.addInventoryItem(item);
-        }*/
-
-        inventoryActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showContent();
-                showManualAddDialog();
-            }
-        });
-
-        Call<InventoryServiceResponse> call = null;
+    private void getItems() {
+        Call<InventoryServiceResponse> call;
         try {
             call = inventoryService.getInventoryCall();
             call.enqueue(inventoryCallback);
