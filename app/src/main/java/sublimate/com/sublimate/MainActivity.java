@@ -6,6 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,10 +73,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        inventoryRecyclerView = (RecyclerView) findViewById(R.id.rv_inventory);
-        loadingSpinner = (ProgressBar) findViewById(R.id.pb_main_loader);
-        errorTextView = (TextView) findViewById(R.id.tv_error_message);
-        inventoryActionButton = (FloatingActionButton) findViewById(R.id.inventory_action_button);
+        inventoryRecyclerView = findViewById(R.id.rv_inventory);
+        loadingSpinner = findViewById(R.id.pb_main_loader);
+        errorTextView = findViewById(R.id.tv_error_message);
+        inventoryActionButton = findViewById(R.id.inventory_action_button);
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         inventoryAdapter = new InventoryAdapter(this);
@@ -154,23 +157,30 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
+    // TODO: Clean this up
     private void showManualAddDialog() {
         if (manualAddDialog == null) {
             manualAddDialog = new Dialog(this);
             manualAddDialog.setContentView(R.layout.manual_add_dialog);
             manualAddDialog.setTitle(R.string.add_dialog_title);
 
-            final EditText dialogEditText = (EditText) manualAddDialog.findViewById(R.id.et_inventory_item_name);
-            dialogEditText.setText("Item " + (inventoryAdapter.getItemCount() + 1));
+            // Set default values
+            final EditText dialogNameEditText = manualAddDialog.findViewById(R.id.et_inventory_item_name);
+            final EditText dialogQuantityEditText = manualAddDialog.findViewById(R.id.et_inventory_item_quantity);
+            String defaultName = "Item " + (inventoryAdapter.getItemCount() + 1);
+            String defaultQuantity = "1";
+            dialogNameEditText.setText(defaultName);
+            dialogQuantityEditText.setText(defaultQuantity);
 
             // Set up the save button
-            Button dialogButton = (Button) manualAddDialog.findViewById(R.id.button_add_item);
+            final Button dialogButton = (Button) manualAddDialog.findViewById(R.id.button_add_item);
             dialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // Create item from user entry
-                    String itemText = dialogEditText.getText().toString();
-                    InventoryItem item = new InventoryItem(itemText);
+                    String itemText = dialogNameEditText.getText().toString();
+                    int itemQuantity = Integer.parseInt(dialogQuantityEditText.getText().toString());
+                    InventoryItem item = new InventoryItem(itemText, itemQuantity);
 
                     // UI
                     inventoryAdapter.addInventoryItem(item);
@@ -181,14 +191,38 @@ public class MainActivity extends AppCompatActivity {
                     ManualEntry manualEntry = new ManualEntry(item);
                     String itemJson = gson.toJson(manualEntry, ManualEntry.class);
                     webSocket.send(itemJson);
-                    Log.d(WebSocketEventListener.TAG, "Manual entry sent.");
+                    Log.d(WebSocketEventListener.TAG, "Manual entry sent: " + itemJson);
 
                     manualAddDialog.dismiss();
                 }
             });
+
+            TextWatcher textWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (TextUtils.isEmpty(editable)) {
+                        dialogButton.setEnabled(false);
+                    } else {
+                        dialogButton.setEnabled(true);
+                    }
+                }
+            };
+
+            dialogNameEditText.addTextChangedListener(textWatcher);
+            dialogQuantityEditText.addTextChangedListener(textWatcher);
         }
 
-        final EditText dialogEditText = (EditText) manualAddDialog.findViewById(R.id.et_inventory_item_name);
+        final EditText dialogEditText = manualAddDialog.findViewById(R.id.et_inventory_item_name);
         dialogEditText.setText("Item " + (inventoryAdapter.getItemCount() + 1));
         manualAddDialog.show();
     }

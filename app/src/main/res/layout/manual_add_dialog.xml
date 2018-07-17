@@ -25,6 +25,27 @@
             android:focusable="true"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+        <TextView
+            android:id="@+id/tv_inventory_item_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/add_dialog_item_quantity"/>
+        <EditText
+            android:id="@+id/et_inventory_item_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:inputType="number"/>
+    </LinearLayout>
+
     <Button
         android:id="@+id/button_add_item"
         android:layout_width="wrap_content"

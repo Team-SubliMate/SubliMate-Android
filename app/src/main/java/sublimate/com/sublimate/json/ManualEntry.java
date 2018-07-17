@@ -3,7 +3,8 @@ package sublimate.com.sublimate.json;
 import com.google.gson.annotations.SerializedName;
 
 public class ManualEntry {
-    private String EVENT_TYPE = "MANUAL_ENTRY";
+    private static final String EVENT_TYPE = "MANUAL_ENTRY";
+    private static final int FRIDGE_ID = 1;
 
     @SerializedName("type")
     private String type;

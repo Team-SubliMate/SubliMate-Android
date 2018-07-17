@@ -26,9 +26,8 @@ public class InventoryItem {
         this.name = name;
     }
 
-    public InventoryItem(String name, double weight, int quantity) {
+    public InventoryItem(String name, int quantity) {
         this.name = name;
-        this.weight = weight;
         this.quantity = quantity;
     }
 
