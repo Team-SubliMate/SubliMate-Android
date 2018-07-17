@@ -13,7 +13,7 @@ public class InventoryService {
     private static InventoryService inventoryService;
 
     // This doesn't work on the Android Emulator because it'll refer to the loopback address on the EMULATOR. Use http://10.0.2.2:3000 on the emulator instead.
-    private static String BASE_URL = "http://localhost:3000";
+    private static String BASE_URL = "http://10.0.2.2:3000";
 
     private Retrofit retrofit;
 

@@ -20,9 +20,8 @@ public class WebSocketEventListener extends WebSocketListener {
      * messages.
      */
     public void onOpen(WebSocket webSocket, Response response) {
-        webSocket.send("hello world!");
-        webSocket.send("goodbye cruel world!");
-        webSocket.close(NORMAL_CLOSURE_STATUS, "nothing to do");
+        webSocket.send("{\"type\": \"NEW_CLIENT\", \"value\": \"android\"}");
+        //webSocket.close(NORMAL_CLOSURE_STATUS, "nothing to do");
     }
 
     /** Invoked when a text (type {@code 0x1}) message has been received. */

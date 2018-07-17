@@ -31,7 +31,7 @@ import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
 
 public class MainActivity extends AppCompatActivity {
-    public static String WEBSOCKET_URL = "ws://echo.websocket.org";
+    public static String WEBSOCKET_URL = "ws://192.168.0.134:8090";
 
     private RecyclerView inventoryRecyclerView;
     private InventoryAdapter inventoryAdapter;
@@ -44,12 +44,31 @@ public class MainActivity extends AppCompatActivity {
     private Callback<InventoryServiceResponse> inventoryCallback;
     private InventoryService inventoryService;
     private OkHttpClient client;
+    private WebSocket webSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initView();
+        initHTTP();
+        initWS();
+
+        mock(); // Testing!!!!!!!
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initView() {
         inventoryRecyclerView = (RecyclerView) findViewById(R.id.rv_inventory);
         loadingSpinner = (ProgressBar) findViewById(R.id.pb_main_loader);
         errorTextView = (TextView) findViewById(R.id.tv_error_message);
@@ -61,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
         inventoryRecyclerView.setHasFixedSize(true);
         inventoryRecyclerView.setLayoutManager(layoutManager);
         inventoryRecyclerView.setAdapter(inventoryAdapter);
+    }
 
+    private void initHTTP() {
         // Inventory Service HTTP
         inventoryService = InventoryService.getInventoryService();
 
@@ -79,26 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("HTTP Response Failure: ", t.toString());
             }
         };
+    }
 
+    private void initWS() {
         // Set up WS
-        client = new OkHttpClient();
         Request request = new Request.Builder().url(WEBSOCKET_URL).build();
         WebSocketEventListener listener = new WebSocketEventListener();
-        WebSocket ws = client.newWebSocket(request, listener);
 
+        client = new OkHttpClient();
+        webSocket = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
-
-        mock(); // Testing!!!!!!!
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     private void showContent() {
