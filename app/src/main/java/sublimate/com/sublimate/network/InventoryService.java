@@ -9,7 +9,7 @@ import sublimate.com.sublimate.json.InventoryServiceResponse;
 
 public class InventoryService {
     // This doesn't work on the Android Emulator because it'll refer to the loopback address on the EMULATOR. Use http://10.0.2.2:3000 on the emulator instead.
-    private static final String BASE_URL = "http://10.0.2.2:3000";
+    private static final String BASE_URL = "http://192.168.0.134:3000"; // http://192.168.0.134:3000 http://10.0.2.2:3000
 
     private static InventoryService inventoryService;
 

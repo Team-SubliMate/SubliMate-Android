@@ -42,4 +42,8 @@ public class InventoryItem {
     public int getQuantity() {
         return this.quantity;
     }
+
+    public int getItemId() {
+        return this.itemId;
+    }
 }

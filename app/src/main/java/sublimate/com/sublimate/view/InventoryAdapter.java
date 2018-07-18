@@ -62,4 +62,15 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
         inventoryItems.clear();
         notifyDataSetChanged();
     }
+
+    public void removeItemById(int id) {
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            InventoryItem item = inventoryItems.get(i);
+
+            if (item.getItemId() == id) {
+                inventoryItems.remove(i);
+                notifyItemRemoved(i);
+            }
+        }
+    }
 }

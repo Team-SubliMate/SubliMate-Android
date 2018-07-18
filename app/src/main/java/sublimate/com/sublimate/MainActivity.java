@@ -31,8 +31,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import sublimate.com.sublimate.json.InventoryItem;
 import sublimate.com.sublimate.json.InventoryServiceResponse;
-import sublimate.com.sublimate.json.ManualEntry;
+import sublimate.com.sublimate.json.ManualItemEvent;
 import sublimate.com.sublimate.network.InventoryService;
+import sublimate.com.sublimate.network.WebSocketEventHandler;
 import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
 
@@ -117,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
     private void initWS() {
         // Set up WS
         Request request = new Request.Builder().url(WebSocketEventListener.WEBSOCKET_URL).build();
-        WebSocketEventListener listener = new WebSocketEventListener();
+        WebSocketEventHandler handler = new WebSocketEventHandler(inventoryAdapter);
+        WebSocketEventListener listener = new WebSocketEventListener(handler);
 
         client = new OkHttpClient();
         webSocket = client.newWebSocket(request, listener);
@@ -182,16 +184,16 @@ public class MainActivity extends AppCompatActivity {
                     int itemQuantity = Integer.parseInt(dialogQuantityEditText.getText().toString());
                     InventoryItem item = new InventoryItem(itemText, itemQuantity);
 
-                    // UI
-                    inventoryAdapter.addInventoryItem(item);
-                    showToast("The item \"" + item.getName() + "\" has been added.");
-
                     // Send to backend
                     Gson gson = new Gson();
-                    ManualEntry manualEntry = new ManualEntry(item);
-                    String itemJson = gson.toJson(manualEntry, ManualEntry.class);
+                    ManualItemEvent manualItemEvent = new ManualItemEvent(item);
+                    String itemJson = gson.toJson(manualItemEvent, ManualItemEvent.class);
                     webSocket.send(itemJson);
                     Log.d(WebSocketEventListener.TAG, "Manual entry sent: " + itemJson);
+
+                    // TODO: Don't add right away, wait for backend socket event UI
+//                    inventoryAdapter.addInventoryItem(item);
+//                    showToast("The item \"" + item.getName() + "\" has been added.");
 
                     manualAddDialog.dismiss();
                 }

@@ -2,18 +2,32 @@ package sublimate.com.sublimate.network;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import sublimate.com.sublimate.json.AddItemEvent;
+import sublimate.com.sublimate.json.RemoveItemEvent;
+import sublimate.com.sublimate.json.TieBreakerEvent;
+import sublimate.com.sublimate.json.TieBreakerEventResponse;
+import sublimate.com.sublimate.json.WebSocketEvent;
 
 public class WebSocketEventListener extends WebSocketListener {
-    public static final String WEBSOCKET_URL = "ws://10.0.2.2:8090";
+    public static final String WEBSOCKET_URL = "ws://192.168.0.134:8090"; // ws://192.168.0.134:8090 ws://10.0.2.2:8090
     public static final int NORMAL_CLOSURE_STATUS = 1000;
 
     public static final String TAG = WebSocketEventListener.class.getSimpleName();
 
-    public WebSocketEventListener() {
+    public static final String ITEM_REMOVED = "ITEM_REMOVED";
+    public static final String WHICH_ITEM_REMOVED = "WHICH_ITEM_REMOVED";
+    public static final String ITEM_ADDED = "ITEM_ADDED";
+
+    private WebSocketEventHandler handler;
+
+    public WebSocketEventListener(WebSocketEventHandler handler) {
+        this.handler = handler;
     }
 
     /**
@@ -28,6 +42,31 @@ public class WebSocketEventListener extends WebSocketListener {
 
     /** Invoked when a text (type {@code 0x1}) message has been received. */
     public void onMessage(WebSocket webSocket, String text) {
+        Gson gson = new Gson();
+
+        WebSocketEvent event = gson.fromJson(text, WebSocketEvent.class);
+
+        switch (event.getType()) {
+            case ITEM_REMOVED:
+                RemoveItemEvent removeItemEvent = gson.fromJson(text, RemoveItemEvent.class);
+                handler.onRemoveItemEvent(removeItemEvent);
+                break;
+            case WHICH_ITEM_REMOVED:
+                TieBreakerEvent tieBreakerEvent = gson.fromJson(text, TieBreakerEvent.class);
+                int itemId = handler.onTieBreakerEvent(tieBreakerEvent);
+                TieBreakerEventResponse eventResponse = new TieBreakerEventResponse(itemId);
+
+                String response = gson.toJson(eventResponse, TieBreakerEventResponse.class);
+                webSocket.send(response);
+                break;
+            case ITEM_ADDED:
+                AddItemEvent addItemEvent = gson.fromJson(text, AddItemEvent.class);
+                handler.onAddItemEvent(addItemEvent);
+                break;
+            default:
+                break;
+        }
+
         Log.d(TAG, "Received message: " + text);
     }
 
