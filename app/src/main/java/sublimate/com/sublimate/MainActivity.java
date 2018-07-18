@@ -1,7 +1,10 @@
 package sublimate.com.sublimate;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +14,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +40,10 @@ import sublimate.com.sublimate.network.InventoryService;
 import sublimate.com.sublimate.network.WebSocketEventHandler;
 import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
+import sublimate.com.sublimate.view.PreferencesActivity;
+
+import static sublimate.com.sublimate.network.WebSocketEventListener.WEBSOCKET_URL;
+import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_ADDRESS;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView inventoryRecyclerView;
@@ -67,12 +75,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.menu_settings:
+                Intent intent = new Intent(this, PreferencesActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initView() {
@@ -99,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initHTTP() {
         // Inventory Service HTTP
-        inventoryService = InventoryService.getInventoryService();
+        inventoryService = InventoryService.getInventoryService(this);
 
         inventoryCallback = new Callback<InventoryServiceResponse>() {
             @Override
@@ -118,8 +138,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initWS() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         // Set up WS
-        Request request = new Request.Builder().url(WebSocketEventListener.WEBSOCKET_URL).build();
+        Request request = new Request.Builder().url(prefs.getString(WEBSOCKET_ADDRESS, WEBSOCKET_URL)).build();
         WebSocketEventHandler handler = new WebSocketEventHandler(inventoryAdapter, tieBreakerDialog);
         WebSocketEventListener listener = new WebSocketEventListener(handler);
 

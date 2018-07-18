@@ -15,7 +15,7 @@ import sublimate.com.sublimate.json.TieBreakerEventResponse;
 import sublimate.com.sublimate.json.WebSocketEvent;
 
 public class WebSocketEventListener extends WebSocketListener {
-    public static final String WEBSOCKET_URL = "ws://192.168.0.134:8090"; // ws://192.168.0.134:8090 ws://10.0.2.2:8090
+    public static final String WEBSOCKET_URL = "ws://10.0.2.2:8090"; // ws://192.168.0.134:8090 ws://10.0.2.2:8090
     public static final int NORMAL_CLOSURE_STATUS = 1000;
 
     public static final String TAG = WebSocketEventListener.class.getSimpleName();
