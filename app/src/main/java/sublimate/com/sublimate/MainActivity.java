@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton inventoryActionButton;
     private Toast toast;
     private Dialog manualAddDialog;
+    private Dialog tieBreakerDialog;
 
     private Callback<InventoryServiceResponse> inventoryCallback;
     private InventoryService inventoryService;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initView();
+        initTieBreakerDialog(); // TODO: Clean up
         initHTTP();
         initWS();
 
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     private void initWS() {
         // Set up WS
         Request request = new Request.Builder().url(WebSocketEventListener.WEBSOCKET_URL).build();
-        WebSocketEventHandler handler = new WebSocketEventHandler(inventoryAdapter);
+        WebSocketEventHandler handler = new WebSocketEventHandler(inventoryAdapter, tieBreakerDialog);
         WebSocketEventListener listener = new WebSocketEventListener(handler);
 
         client = new OkHttpClient();
@@ -175,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
             dialogQuantityEditText.setText(defaultQuantity);
 
             // Set up the save button
-            final Button dialogButton = (Button) manualAddDialog.findViewById(R.id.button_add_item);
+            final Button dialogButton = manualAddDialog.findViewById(R.id.button_add_item);
             dialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -236,6 +238,14 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(inventoryCallback);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initTieBreakerDialog() {
+        if (tieBreakerDialog == null) {
+            tieBreakerDialog = new Dialog(this);
+            tieBreakerDialog.setContentView(R.layout.tiebreaker_dialog);
+            tieBreakerDialog.setTitle(R.string.tiebreaker_dialog_title);
         }
     }
 }

@@ -10,4 +10,8 @@
     <string name="add_dialog_item_name">Name: </string>
     <string name="add_dialog_item_quantity">Quantity: </string>
     <string name="add_dialog_add_item">Add</string>
+
+    <!-- Tiebreaker Dialog -->
+    <string name="tiebreaker_dialog_title">Tiebreaker</string>
+    <string name="tiebreaker_dialog_confirm">OK</string>
 </resources>

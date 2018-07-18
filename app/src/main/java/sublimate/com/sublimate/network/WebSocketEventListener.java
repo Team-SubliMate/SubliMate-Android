@@ -53,11 +53,12 @@ public class WebSocketEventListener extends WebSocketListener {
                 break;
             case WHICH_ITEM_REMOVED:
                 TieBreakerEvent tieBreakerEvent = gson.fromJson(text, TieBreakerEvent.class);
-                int itemId = handler.onTieBreakerEvent(tieBreakerEvent);
+                int itemId = handler.onTieBreakerEvent(tieBreakerEvent, webSocket);
                 TieBreakerEventResponse eventResponse = new TieBreakerEventResponse(itemId);
 
-                String response = gson.toJson(eventResponse, TieBreakerEventResponse.class);
-                webSocket.send(response);
+                // TODO: FIX
+//                String response = gson.toJson(eventResponse, TieBreakerEventResponse.class);
+//                webSocket.send(response);
                 break;
             case ITEM_ADDED:
                 AddItemEvent addItemEvent = gson.fromJson(text, AddItemEvent.class);

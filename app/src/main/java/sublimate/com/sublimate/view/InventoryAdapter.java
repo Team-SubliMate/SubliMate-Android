@@ -48,6 +48,18 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
         return inventoryItems.size();
     }
 
+    public int findItemById(int id) {
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            InventoryItem item = inventoryItems.get(i);
+
+            if (item.getItemId() == id) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public void setInventoryItems(List<InventoryItem> items) {
         inventoryItems.addAll(items);
         notifyDataSetChanged();
@@ -64,13 +76,21 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
     }
 
     public void removeItemById(int id) {
+        int itemPosition = findItemById(id);
+        inventoryItems.remove(itemPosition);
+        notifyItemRemoved(itemPosition);
+    }
+
+    // TODO: REMOVE
+    public InventoryItem getItemById(int id) {
         for (int i = 0; i < inventoryItems.size(); i++) {
             InventoryItem item = inventoryItems.get(i);
 
             if (item.getItemId() == id) {
-                inventoryItems.remove(i);
-                notifyItemRemoved(i);
+                return item;
             }
         }
+
+        return null;
     }
 }
