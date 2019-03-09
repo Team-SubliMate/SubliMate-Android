@@ -12,9 +12,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import sublimate.com.sublimate.json.InventoryServiceResponse;
 import sublimate.com.sublimate.view.PreferencesActivity;
 
+import static sublimate.com.sublimate.view.PreferencesActivity.HTTP_URL;
+
 public class InventoryService {
     // This doesn't work on the Android Emulator because it'll refer to the loopback address on the EMULATOR. Use http://10.0.2.2:3000 on the emulator instead.
-    public static final String HTTP_URL = "http://10.0.2.2:3000"; // http://192.168.0.134:3000 http://10.0.2.2:3000
 
     private static InventoryService inventoryService;
 

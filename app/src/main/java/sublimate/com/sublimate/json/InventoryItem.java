@@ -18,6 +18,9 @@ public class InventoryItem {
     @SerializedName("quantity")
     private int quantity;
 
+    @SerializedName("image_url")
+    private String imageUrl;
+
     public InventoryItem() {
         // Empty constructor for serialization purposes (DO NOT REMOVE)
     }
@@ -30,6 +33,20 @@ public class InventoryItem {
         this.name = name;
         this.quantity = quantity;
     }
+
+    public InventoryItem(String name, int quantity, int weight) {
+        this.name = name;
+        this.quantity = quantity;
+        this.weight = weight;
+    }
+
+    public InventoryItem(String name, int quantity, int weight, String imageUrl) {
+        this.name = name;
+        this.quantity = quantity;
+        this.weight = weight;
+        this.imageUrl = imageUrl;
+    }
+
 
     public String getName() {
         return this.name;
@@ -45,5 +62,9 @@ public class InventoryItem {
 
     public int getItemId() {
         return this.itemId;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
     }
 }

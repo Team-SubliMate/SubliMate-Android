@@ -7,8 +7,8 @@
     <string name="error_message">Oops, something went wrong!</string>
 
     <!-- Manual Add Dialog -->
-    <string name="add_dialog_title">Manual Inventory Update</string>
-    <string name="add_dialog_item_name">Name: </string>
+    <string name="add_dialog_title">Add an Item</string>
+    <string name="add_dialog_item_name">Item Name: </string>
     <string name="add_dialog_item_quantity">Quantity: </string>
     <string name="add_dialog_add_item">Add</string>
 
@@ -17,8 +17,7 @@
     <string name="tiebreaker_dialog_confirm">OK</string>
 
     <!-- Preferences -->
-    <string name="preferences_network_title">Network</string>
-    <string name="preferences_websocket_ip">WebSocket IP:</string>
-    <string name="preferences_websocket_summary">ws://ip:port</string>
-    <string name="preferences_websocket_dialog_message">Enter the WebSocket IP</string>
+    <string name="preferences_use_mock_label">Use Mock:</string>
+    <string name="preferences_websocket_ip_label">WebSocket Address:</string>
+    <string name="preferences_http_ip_label">HTTP Address:</string>
 </resources>

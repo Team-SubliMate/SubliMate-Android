@@ -1,10 +1,12 @@
 package sublimate.com.sublimate;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,8 +46,9 @@ import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
 import sublimate.com.sublimate.view.PreferencesActivity;
 
-import static sublimate.com.sublimate.network.WebSocketEventListener.WEBSOCKET_URL;
+import static sublimate.com.sublimate.view.PreferencesActivity.USE_MOCK;
 import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_ADDRESS;
+import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_URL;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView inventoryRecyclerView;
@@ -123,15 +128,20 @@ public class MainActivity extends AppCompatActivity {
 
         inventoryCallback = new Callback<InventoryServiceResponse>() {
             @Override
-            public void onResponse(Call<InventoryServiceResponse> call, Response<InventoryServiceResponse> response) {
+            public void onResponse(@NonNull Call<InventoryServiceResponse> call, @NonNull Response<InventoryServiceResponse> response) {
                 InventoryServiceResponse inventoryResponse = response.body();
+
+                if (inventoryResponse == null) {
+                    Log.d("HTTP Response missing", "No inventory response");
+                    return;
+                }
 
                 inventoryAdapter.setInventoryItems(inventoryResponse.getItems());
                 showContent();
             }
 
             @Override
-            public void onFailure(Call<InventoryServiceResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<InventoryServiceResponse> call, @NonNull Throwable t) {
                 Log.d("HTTP Response Failure: ", t.toString());
             }
         };
@@ -184,76 +194,92 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO: Clean this up
+    @SuppressLint("SetTextI18n")
     private void showManualAddDialog() {
         if (manualAddDialog == null) {
             manualAddDialog = new Dialog(this);
             manualAddDialog.setContentView(R.layout.manual_add_dialog);
             manualAddDialog.setTitle(R.string.add_dialog_title);
-
-            // Set default values
-            final EditText dialogNameEditText = manualAddDialog.findViewById(R.id.et_inventory_item_name);
-            final EditText dialogQuantityEditText = manualAddDialog.findViewById(R.id.et_inventory_item_quantity);
-            String defaultName = "Item " + (inventoryAdapter.getItemCount() + 1);
-            String defaultQuantity = "1";
-            dialogNameEditText.setText(defaultName);
-            dialogQuantityEditText.setText(defaultQuantity);
-
-            // Set up the save button
-            final Button dialogButton = manualAddDialog.findViewById(R.id.button_add_item);
-            dialogButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Create item from user entry
-                    String itemText = dialogNameEditText.getText().toString();
-                    int itemQuantity = Integer.parseInt(dialogQuantityEditText.getText().toString());
-                    InventoryItem item = new InventoryItem(itemText, itemQuantity);
-
-                    // Send to backend
-                    Gson gson = new Gson();
-                    ManualItemEvent manualItemEvent = new ManualItemEvent(item);
-                    String itemJson = gson.toJson(manualItemEvent, ManualItemEvent.class);
-                    webSocket.send(itemJson);
-                    Log.d(WebSocketEventListener.TAG, "Manual entry sent: " + itemJson);
-
-                    // TODO: Don't add right away, wait for backend socket event UI
-//                    inventoryAdapter.addInventoryItem(item);
-//                    showToast("The item \"" + item.getName() + "\" has been added.");
-
-                    manualAddDialog.dismiss();
-                }
-            });
-
-            TextWatcher textWatcher = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (TextUtils.isEmpty(editable)) {
-                        dialogButton.setEnabled(false);
-                    } else {
-                        dialogButton.setEnabled(true);
-                    }
-                }
-            };
-
-            dialogNameEditText.addTextChangedListener(textWatcher);
-            dialogQuantityEditText.addTextChangedListener(textWatcher);
         }
 
-        final EditText dialogEditText = manualAddDialog.findViewById(R.id.et_inventory_item_name);
-        dialogEditText.setText("Item " + (inventoryAdapter.getItemCount() + 1));
+        final EditText dialogNameEditText = manualAddDialog.findViewById(R.id.et_inventory_item_name);
+        final EditText dialogQuantityEditText = manualAddDialog.findViewById(R.id.et_inventory_item_quantity);
+
+        // Set default values
+
+        String defaultName = "Item " + (inventoryAdapter.getItemCount() + 1);
+        String defaultQuantity = "1";
+        dialogNameEditText.setText(defaultName);
+        dialogQuantityEditText.setText(defaultQuantity);
+
+        // Set up the save button
+        final Button dialogButton = manualAddDialog.findViewById(R.id.button_add_item);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Create item from user entry
+                String itemText = dialogNameEditText.getText().toString();
+                int itemQuantity = Integer.parseInt(dialogQuantityEditText.getText().toString());
+                InventoryItem item = new InventoryItem(itemText, itemQuantity);
+
+                // Send to backend
+                Gson gson = new Gson();
+                ManualItemEvent manualItemEvent = new ManualItemEvent(item);
+                String itemJson = gson.toJson(manualItemEvent, ManualItemEvent.class);
+                webSocket.send(itemJson);
+                Log.d(WebSocketEventListener.TAG, "Manual entry sent: " + itemJson);
+
+                // TODO: Don't add right away, wait for backend socket event UI
+                inventoryAdapter.addInventoryItem(item);
+                showToast("The item \"" + item.getName() + "\" has been added.");
+
+                manualAddDialog.dismiss();
+            }
+        });
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (TextUtils.isEmpty(editable)) {
+                    dialogButton.setEnabled(false);
+                } else {
+                    dialogButton.setEnabled(true);
+                }
+            }
+        };
+
+        dialogNameEditText.addTextChangedListener(textWatcher);
+        dialogQuantityEditText.addTextChangedListener(textWatcher);
+
+        dialogNameEditText.setText("Item " + (inventoryAdapter.getItemCount() + 1));
         manualAddDialog.show();
     }
 
     private void getItems() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getBoolean(USE_MOCK, false)) {
+            List<InventoryItem> items = new ArrayList<>();
+            InventoryItem item = new InventoryItem("Item no image", 1, 100);
+            InventoryItem itemWithImage = new InventoryItem("Item with image", 1, 100, "https://www.smartpettoysreview.com/wp-content/uploads/2018/04/dog-corgi-husky-mix.jpg");
+            items.add(item);
+            items.add(itemWithImage);
+
+            inventoryAdapter.setInventoryItems(items);
+            showContent();
+            return;
+        }
+
         Call<InventoryServiceResponse> call;
         try {
             call = inventoryService.getInventoryCall();

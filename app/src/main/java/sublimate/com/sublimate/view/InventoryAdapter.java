@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +40,16 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
     @Override
     public void onBindViewHolder(@NonNull InventoryItemViewHolder holder, int position) {
         InventoryItem item = inventoryItems.get(position);
-        String itemName = item.getName();
 
-        holder.setText(itemName);
+        holder.setName(item.getName());
+        holder.setQuantity(item.getQuantity());
+        holder.setImage(item.getImageUrl());
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull InventoryItemViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.clearImage();
     }
 
     @Override
