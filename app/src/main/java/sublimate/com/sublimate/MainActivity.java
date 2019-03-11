@@ -1,6 +1,5 @@
 package sublimate.com.sublimate;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -11,11 +10,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.GridLayoutManager;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
@@ -23,13 +19,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,18 +35,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import sublimate.com.sublimate.json.InventoryItem;
 import sublimate.com.sublimate.json.InventoryServiceResponse;
-import sublimate.com.sublimate.json.ManualItemEvent;
 import sublimate.com.sublimate.network.InventoryService;
 import sublimate.com.sublimate.network.WebSocketEventHandler;
 import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
+import sublimate.com.sublimate.view.ManualAddDialog;
 import sublimate.com.sublimate.view.PreferencesActivity;
 
 import static sublimate.com.sublimate.view.PreferencesActivity.USE_MOCK;
 import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_ADDRESS;
 import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ViewContract{
     private static int MAX_CACHE_SIZE = 5;
 
     private Presenter presenter;
@@ -84,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presenter = new Presenter();
+        presenter = new Presenter(this);
         initView();
         initTieBreakerDialog(); // TODO: Clean up
         initHTTP();
@@ -234,80 +226,11 @@ public class MainActivity extends AppCompatActivity {
         errorTextView.setVisibility(View.GONE);
     }
 
-    private void showToast(String text) {
-        toast = Toast.makeText(this, text, Toast.LENGTH_LONG);
-        toast.show();
-    }
-
-    // TODO: Clean this up
-    @SuppressLint("SetTextI18n")
     private void showManualAddDialog() {
         if (manualAddDialog == null) {
-            manualAddDialog = new Dialog(this);
-            manualAddDialog.setContentView(R.layout.manual_add_dialog);
-            manualAddDialog.setTitle(R.string.add_dialog_title);
+            manualAddDialog = new ManualAddDialog(this, presenter);
         }
 
-        final EditText dialogNameEditText = manualAddDialog.findViewById(R.id.et_inventory_item_name);
-        final EditText dialogQuantityEditText = manualAddDialog.findViewById(R.id.et_inventory_item_quantity);
-
-        // Set default values
-
-        String defaultName = "Item " + (inventoryAdapter.getItemCount() + 1);
-        String defaultQuantity = "1";
-        dialogNameEditText.setText(defaultName);
-        dialogQuantityEditText.setText(defaultQuantity);
-
-        // Set up the save button
-        final Button dialogButton = manualAddDialog.findViewById(R.id.button_add_item);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Create item from user entry
-                String itemText = dialogNameEditText.getText().toString();
-                int itemQuantity = Integer.parseInt(dialogQuantityEditText.getText().toString());
-                InventoryItem item = new InventoryItem(42, itemText, itemQuantity);
-
-                // Send to backend
-                Gson gson = new Gson();
-                ManualItemEvent manualItemEvent = new ManualItemEvent(item);
-                String itemJson = gson.toJson(manualItemEvent, ManualItemEvent.class);
-                webSocket.send(itemJson);
-                Log.d(WebSocketEventListener.TAG, "Manual entry sent: " + itemJson);
-
-                // TODO: Don't add right away, wait for backend socket event UI
-                inventoryAdapter.addInventoryItem(item);
-                showToast("The item \"" + item.getName() + "\" has been added.");
-
-                manualAddDialog.dismiss();
-            }
-        });
-
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (TextUtils.isEmpty(editable)) {
-                    dialogButton.setEnabled(false);
-                } else {
-                    dialogButton.setEnabled(true);
-                }
-            }
-        };
-
-        dialogNameEditText.addTextChangedListener(textWatcher);
-        dialogQuantityEditText.addTextChangedListener(textWatcher);
-
-        dialogNameEditText.setText("Item " + (inventoryAdapter.getItemCount() + 1));
         manualAddDialog.show();
     }
 
@@ -356,5 +279,11 @@ public class MainActivity extends AppCompatActivity {
             tieBreakerDialog.setContentView(R.layout.tiebreaker_dialog);
             tieBreakerDialog.setTitle(R.string.tiebreaker_dialog_title);
         }
+    }
+
+    @Override
+    public void showToast(String message) {
+        toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
+        toast.show();
     }
 }
