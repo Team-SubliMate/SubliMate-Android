@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="sublimate.com.sublimate.MainActivity">
     <item
+        android:id="@+id/menu_rearrange"
+        android:orderInCategory="1"
+        android:title="@string/menu_rearrange"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_settings"
         android:orderInCategory="2"
         android:title="@string/settings_name"

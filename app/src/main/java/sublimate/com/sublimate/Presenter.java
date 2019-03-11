@@ -27,4 +27,9 @@ public class Presenter implements PresenterContract {
             Log.d(WebSocketEventListener.TAG, "Remove item event sent: " + itemJson);
         }
     }
+
+    @Override
+    public void rearrangeFridge() {
+        // Send rearrange fridge event
+    }
 }

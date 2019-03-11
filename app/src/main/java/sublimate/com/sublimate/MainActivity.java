@@ -1,7 +1,9 @@
 package sublimate.com.sublimate;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -107,6 +109,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_settings:
                 Intent intent = new Intent(this, PreferencesActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menu_rearrange:
+                new AlertDialog.Builder(this)
+                        .setTitle("Rearrange Contents")
+                        .setMessage("You're about to stop the fridge from responding to item changes in order to rearrange the fridge contents. Are you sure you want to proceed?")
+                        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                presenter.rearrangeFridge();
+                            }
+                        }).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
