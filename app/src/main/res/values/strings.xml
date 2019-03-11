@@ -3,6 +3,10 @@
     <string name="settings_refresh">Refresh</string>
     <string name="settings_name">Settings</string>
 
+    <!-- Titles -->
+    <string name="title_frequent">Frequent</string>
+    <string name="title_all_items">All Items</string>
+
     <!-- Errors -->
     <string name="error_message">Oops, something went wrong!</string>
 
@@ -14,7 +18,7 @@
 
     <!-- Tiebreaker Dialog -->
     <string name="tiebreaker_dialog_title">Tiebreaker</string>
-    <string name="tiebreaker_dialog_confirm">OK</string>
+    <string name="OK">OK</string>
 
     <!-- Preferences -->
     <string name="preferences_use_mock_label">Use Mock:</string>

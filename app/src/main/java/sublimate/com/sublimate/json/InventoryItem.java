@@ -29,18 +29,18 @@ public class InventoryItem {
         this.name = name;
     }
 
-    public InventoryItem(String name, int quantity) {
+    public InventoryItem(int itemId, String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
     }
 
-    public InventoryItem(String name, int quantity, int weight) {
+    public InventoryItem(int itemId, String name, int quantity, int weight) {
         this.name = name;
         this.quantity = quantity;
         this.weight = weight;
     }
 
-    public InventoryItem(String name, int quantity, int weight, String imageUrl) {
+    public InventoryItem(int itemId, String name, int quantity, int weight, String imageUrl) {
         this.name = name;
         this.quantity = quantity;
         this.weight = weight;

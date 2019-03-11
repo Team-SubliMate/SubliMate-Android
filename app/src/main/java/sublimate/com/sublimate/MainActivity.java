@@ -15,10 +15,12 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -51,10 +53,18 @@ import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_ADDRESS
 import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_URL;
 
 public class MainActivity extends AppCompatActivity {
+    private static int MAX_CACHE_SIZE = 5;
+
+    private Presenter presenter;
+
+    private ViewGroup content;
     private RecyclerView inventoryRecyclerView;
+    private RecyclerView frequentRecyclerView;
     private InventoryAdapter inventoryAdapter;
+    private InventoryAdapter frequentAdapter;
     private ProgressBar loadingSpinner;
     private TextView errorTextView;
+
     private FloatingActionButton inventoryActionButton;
     private Toast toast;
     private Dialog manualAddDialog;
@@ -65,11 +75,14 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient client;
     private WebSocket webSocket;
 
+    private LruCache<Integer, InventoryItem> frequentItemsCache;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        presenter = new Presenter();
         initView();
         initTieBreakerDialog(); // TODO: Clean up
         initHTTP();
@@ -101,17 +114,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        inventoryRecyclerView = findViewById(R.id.rv_inventory);
+        content = findViewById(R.id.content);
+        frequentItemsCache = new LruCache<>(MAX_CACHE_SIZE);
         loadingSpinner = findViewById(R.id.pb_main_loader);
         errorTextView = findViewById(R.id.tv_error_message);
         inventoryActionButton = findViewById(R.id.inventory_action_button);
-
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
-        inventoryAdapter = new InventoryAdapter(this);
-
-        inventoryRecyclerView.setHasFixedSize(true);
-        inventoryRecyclerView.setLayoutManager(layoutManager);
-        inventoryRecyclerView.setAdapter(inventoryAdapter);
 
         inventoryActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +127,30 @@ public class MainActivity extends AppCompatActivity {
                 showManualAddDialog();
             }
         });
+
+        initInventory();
+        initFrequent();
+    }
+
+    private void initFrequent() {
+        frequentRecyclerView = findViewById(R.id.rv_frequent);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 5);
+        frequentAdapter = new InventoryAdapter(this, presenter);
+
+        frequentRecyclerView.setHasFixedSize(true);
+        frequentRecyclerView.setLayoutManager(layoutManager);
+        frequentRecyclerView.setAdapter(frequentAdapter);
+    }
+
+    private void initInventory() {
+        inventoryRecyclerView = findViewById(R.id.rv_inventory);
+
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
+        inventoryAdapter = new InventoryAdapter(this, presenter);
+
+        inventoryRecyclerView.setHasFixedSize(true);
+        inventoryRecyclerView.setLayoutManager(layoutManager);
+        inventoryRecyclerView.setAdapter(inventoryAdapter);
     }
 
     private void initHTTP() {
@@ -158,12 +189,14 @@ public class MainActivity extends AppCompatActivity {
         client = new OkHttpClient();
         webSocket = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
+
+        presenter.setWebSocket(webSocket);
     }
 
     private void showContent() {
         hideLoading();
         hideError();
-        inventoryRecyclerView.setVisibility(View.VISIBLE);
+        content.setVisibility(View.VISIBLE);
     }
 
     private void hideContent() {
@@ -220,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                 // Create item from user entry
                 String itemText = dialogNameEditText.getText().toString();
                 int itemQuantity = Integer.parseInt(dialogQuantityEditText.getText().toString());
-                InventoryItem item = new InventoryItem(itemText, itemQuantity);
+                InventoryItem item = new InventoryItem(42, itemText, itemQuantity);
 
                 // Send to backend
                 Gson gson = new Gson();
@@ -269,14 +302,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (prefs.getBoolean(USE_MOCK, false)) {
-            List<InventoryItem> items = new ArrayList<>();
-            InventoryItem item = new InventoryItem("Item no image", 1, 100);
-            InventoryItem itemWithImage = new InventoryItem("Item with image", 1, 100, "https://www.smartpettoysreview.com/wp-content/uploads/2018/04/dog-corgi-husky-mix.jpg");
-            items.add(item);
-            items.add(itemWithImage);
-
-            inventoryAdapter.setInventoryItems(items);
-            showContent();
+            setUpMock();
             return;
         }
 
@@ -287,6 +313,28 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setUpMock() {
+        List<InventoryItem> items = new ArrayList<>();
+        InventoryItem item = new InventoryItem(1, "Item no image", 1, 100);
+        InventoryItem itemWithImage = new InventoryItem(2, "Item with image", 1, 100, "https://www.smartpettoysreview.com/wp-content/uploads/2018/04/dog-corgi-husky-mix.jpg");
+        items.add(item);
+        items.add(itemWithImage);
+
+        frequentItemsCache.put(1, item);
+        frequentItemsCache.put(2, itemWithImage);
+
+        // filler items
+        for (int i = 3; i < 12; i++) {
+            InventoryItem fill = new InventoryItem(i, "Item " + i, 1, 100);
+            items.add(fill);
+            frequentItemsCache.put(i, fill);
+        }
+
+        inventoryAdapter.setInventoryItems(items);
+        frequentAdapter.setInventoryItems(new ArrayList<>(frequentItemsCache.snapshot().values()));
+        showContent();
     }
 
     private void initTieBreakerDialog() {

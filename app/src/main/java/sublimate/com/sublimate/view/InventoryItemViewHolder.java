@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,7 +31,7 @@ public class InventoryItemViewHolder extends RecyclerView.ViewHolder {
         this.context = context;
         this.inventoryItems = inventoryItems;
 
-        inventoryItemLayout = itemView.findViewById(R.id.ll_inventory_item);
+        inventoryItemLayout = itemView.findViewById(R.id.layout_inventory_item);
         itemImageIV = inventoryItemLayout.findViewById(R.id.iv_inventory_item_image);
         itemNameTV = inventoryItemLayout.findViewById(R.id.tv_inventory_item_text);
         itemQuantityTV = inventoryItemLayout.findViewById(R.id.tv_inventory_item_quantity);
@@ -60,5 +59,9 @@ public class InventoryItemViewHolder extends RecyclerView.ViewHolder {
 
     public void clearImage() {
         Glide.with(context).clear(itemImageIV);
+    }
+
+    public void setOnLongClickListener(View.OnLongClickListener listener) {
+        this.inventoryItemLayout.setOnLongClickListener(listener);
     }
 }

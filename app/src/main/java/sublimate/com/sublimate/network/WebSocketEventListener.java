@@ -9,6 +9,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 import sublimate.com.sublimate.json.AddItemEvent;
+import sublimate.com.sublimate.json.ManualItemEvent;
 import sublimate.com.sublimate.json.RemoveItemEvent;
 import sublimate.com.sublimate.json.TieBreakerEvent;
 import sublimate.com.sublimate.json.TieBreakerEventResponse;
@@ -18,10 +19,6 @@ public class WebSocketEventListener extends WebSocketListener {
     public static final int NORMAL_CLOSURE_STATUS = 1000;
 
     public static final String TAG = WebSocketEventListener.class.getSimpleName();
-
-    public static final String ITEM_REMOVED = "ITEM_REMOVED";
-    public static final String WHICH_ITEM_REMOVED = "WHICH_ITEM_REMOVED";
-    public static final String ITEM_ADDED = "ITEM_ADDED";
 
     private WebSocketEventHandler handler;
 
@@ -46,11 +43,11 @@ public class WebSocketEventListener extends WebSocketListener {
         WebSocketEvent event = gson.fromJson(text, WebSocketEvent.class);
 
         switch (event.getType()) {
-            case ITEM_REMOVED:
+            case ManualItemEvent.EVENT_TYPE:
                 RemoveItemEvent removeItemEvent = gson.fromJson(text, RemoveItemEvent.class);
                 handler.onRemoveItemEvent(removeItemEvent);
                 break;
-            case WHICH_ITEM_REMOVED:
+            case TieBreakerEvent.WHICH_ITEM_REMOVED:
                 TieBreakerEvent tieBreakerEvent = gson.fromJson(text, TieBreakerEvent.class);
                 int itemId = handler.onTieBreakerEvent(tieBreakerEvent, webSocket);
                 TieBreakerEventResponse eventResponse = new TieBreakerEventResponse(itemId);
@@ -59,7 +56,7 @@ public class WebSocketEventListener extends WebSocketListener {
 //                String response = gson.toJson(eventResponse, TieBreakerEventResponse.class);
 //                webSocket.send(response);
                 break;
-            case ITEM_ADDED:
+            case AddItemEvent.ITEM_ADDED:
                 AddItemEvent addItemEvent = gson.fromJson(text, AddItemEvent.class);
                 handler.onAddItemEvent(addItemEvent);
                 break;

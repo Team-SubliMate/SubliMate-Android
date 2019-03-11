@@ -27,7 +27,7 @@
         android:id="@+id/button_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tiebreaker_dialog_confirm"
+        android:text="@string/OK"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/default_margin"/>
 

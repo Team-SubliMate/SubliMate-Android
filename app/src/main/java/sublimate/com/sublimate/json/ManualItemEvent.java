@@ -3,7 +3,7 @@ package sublimate.com.sublimate.json;
 import com.google.gson.annotations.SerializedName;
 
 public class ManualItemEvent extends WebSocketEvent{
-    private static final String EVENT_TYPE = "MANUAL_ENTRY";
+    public static final String EVENT_TYPE = "MANUAL_ENTRY";
 
     @SerializedName("value")
     private InventoryItem item;
