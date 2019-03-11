@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         errorTextView = findViewById(R.id.tv_error_message);
         inventoryActionButton = findViewById(R.id.inventory_action_button);
 
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
         inventoryAdapter = new InventoryAdapter(this);
 
         inventoryRecyclerView.setHasFixedSize(true);
