@@ -8,10 +8,6 @@ public class InventoryServiceResponse {
     @SerializedName("items")
     private List<InventoryItem> items;
 
-    public InventoryServiceResponse() {
-        // Empty constructor for serialization purposes (DO NOT REMOVE)
-    }
-
     public List<InventoryItem> getItems() {
         return this.items;
     }

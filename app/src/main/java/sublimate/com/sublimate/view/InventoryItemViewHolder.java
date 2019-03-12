@@ -47,7 +47,10 @@ public class InventoryItemViewHolder extends RecyclerView.ViewHolder {
 
     public void setImage(String url) {
         if (url == null) {
-            itemImageIV.setImageResource(R.drawable.default_image);
+            Glide.with(context)
+                    .load(R.drawable.default_image)
+                    .fitCenter()
+                    .into(itemImageIV);
             return;
         }
 

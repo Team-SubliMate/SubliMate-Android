@@ -46,7 +46,7 @@ import static sublimate.com.sublimate.view.PreferencesActivity.USE_MOCK;
 import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_ADDRESS;
 import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_URL;
 
-public class MainActivity extends AppCompatActivity implements ViewContract{
+public class MainActivity extends AppCompatActivity implements ViewContract {
     private static int MAX_CACHE_SIZE = 5;
 
     private Presenter presenter;
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract{
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
@@ -103,16 +103,27 @@ public class MainActivity extends AppCompatActivity implements ViewContract{
                 startActivity(intent);
                 return true;
             case R.id.menu_rearrange:
-                new AlertDialog.Builder(this)
-                        .setTitle("Rearrange Contents")
-                        .setMessage("You're about to stop the fridge from responding to item changes in order to rearrange the fridge contents. Are you sure you want to proceed?")
-                        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                presenter.rearrangeFridge();
-                            }
-                        }).show();
-                return true;
+                if (item.getTitle().equals(getString(R.string.menu_rearrange))) {
+                    new AlertDialog.Builder(this)
+                            .setTitle("Rearrange Contents")
+                            .setMessage("You're about to stop the fridge from responding to item changes in order to rearrange the fridge contents. Are you sure you want to proceed?")
+                            .setPositiveButton(R.string.menu_rearrange, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    presenter.stopHandlingEvents();
+                                    item.setTitle(R.string.menu_done_rearrange);
+                                }
+                            }).show();
+                    return true;
+                }
+
+                if (item.getTitle().equals(getString(R.string.menu_done_rearrange))) {
+                    presenter.startHandlingEvents();
+                    item.setTitle(R.string.menu_rearrange);
+                    return true;
+                }
+
+                return false;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -254,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract{
     private void setUpMock() {
         List<InventoryItem> items = new ArrayList<>();
         InventoryItem item = new InventoryItem(1, "Item no image", 1, 100);
-        InventoryItem itemWithImage = new InventoryItem(2, "Item with image", 1, 100, "https://www.smartpettoysreview.com/wp-content/uploads/2018/04/dog-corgi-husky-mix.jpg");
+        InventoryItem itemWithImage = new InventoryItem(2, "Item with image", 1, 100, "http://bulktraveler.com/wp-content/uploads/2015/06/Costco-London-Biritish-Rotisserie-Chicken-1.jpg");
         items.add(item);
         items.add(itemWithImage);
 

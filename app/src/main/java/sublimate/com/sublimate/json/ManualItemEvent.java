@@ -8,10 +8,6 @@ public class ManualItemEvent extends WebSocketEvent{
     @SerializedName("value")
     private InventoryItem item;
 
-    public ManualItemEvent() {
-        // Empty constructor for serialization purposes (DO NOT REMOVE)
-    }
-
     public ManualItemEvent(InventoryItem item) {
         this.type = EVENT_TYPE;
         this.item = item;

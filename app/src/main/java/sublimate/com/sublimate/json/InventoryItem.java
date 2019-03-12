@@ -21,10 +21,6 @@ public class InventoryItem {
     @SerializedName("image_url")
     private String imageUrl;
 
-    public InventoryItem() {
-        // Empty constructor for serialization purposes (DO NOT REMOVE)
-    }
-
     public InventoryItem(String name) {
         this.name = name;
     }
