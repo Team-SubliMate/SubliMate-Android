@@ -45,6 +45,7 @@ public class ManualAddDialog extends Dialog {
                 presenter.addItem(item);
                 presenter.showToast("The item \"" + item.getName() + "\" has been added.");
 
+                dialogNameEditText.setText("");
                 dismiss();
             }
         });
@@ -72,7 +73,5 @@ public class ManualAddDialog extends Dialog {
 
         dialogNameEditText.addTextChangedListener(textWatcher);
         dialogQuantityEditText.addTextChangedListener(textWatcher);
-
-        dialogNameEditText.setText("Item name");
     }
 }
