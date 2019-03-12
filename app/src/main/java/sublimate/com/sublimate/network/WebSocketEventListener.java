@@ -9,7 +9,6 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 import sublimate.com.sublimate.json.AddItemEvent;
-import sublimate.com.sublimate.json.ManualItemEvent;
 import sublimate.com.sublimate.json.RemoveItemEvent;
 import sublimate.com.sublimate.json.TieBreakerEvent;
 import sublimate.com.sublimate.json.TieBreakerEventResponse;
@@ -43,7 +42,7 @@ public class WebSocketEventListener extends WebSocketListener {
         WebSocketEvent event = gson.fromJson(text, WebSocketEvent.class);
 
         switch (event.getType()) {
-            case ManualItemEvent.EVENT_TYPE:
+            case RemoveItemEvent.EVENT_TYPE:
                 RemoveItemEvent removeItemEvent = gson.fromJson(text, RemoveItemEvent.class);
                 handler.onRemoveItemEvent(removeItemEvent);
                 break;
@@ -56,7 +55,7 @@ public class WebSocketEventListener extends WebSocketListener {
 //                String response = gson.toJson(eventResponse, TieBreakerEventResponse.class);
 //                webSocket.send(response);
                 break;
-            case AddItemEvent.ITEM_ADDED:
+            case AddItemEvent.EVENT_TYPE:
                 AddItemEvent addItemEvent = gson.fromJson(text, AddItemEvent.class);
                 handler.onAddItemEvent(addItemEvent);
                 break;

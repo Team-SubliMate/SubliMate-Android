@@ -106,8 +106,11 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
 
     public void removeItemById(int id) {
         int itemPosition = findItemById(id);
-        inventoryItems.remove(itemPosition);
-        notifyItemRemoved(itemPosition);
+        InventoryItem removed = inventoryItems.remove(itemPosition);
+
+        if (removed != null) {
+            notifyItemRemoved(itemPosition);
+        }
     }
 
     // TODO: REMOVE

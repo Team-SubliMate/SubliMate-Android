@@ -18,7 +18,7 @@ public class InventoryItem {
     @SerializedName("quantity")
     private int quantity;
 
-    @SerializedName("image_url")
+    @SerializedName("imgurl")
     private String imageUrl;
 
     public InventoryItem(String name) {

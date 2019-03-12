@@ -8,7 +8,4 @@ import sublimate.com.sublimate.json.InventoryServiceResponse;
 public interface InventoryServiceInterface {
     @GET("api/inventory")
     Call<InventoryServiceResponse> getInventory();
-
-    @GET("get")
-    Call<InventoryServiceResponse> get();
 }

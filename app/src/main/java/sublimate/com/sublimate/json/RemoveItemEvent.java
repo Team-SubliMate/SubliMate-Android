@@ -3,13 +3,13 @@ package sublimate.com.sublimate.json;
 import com.google.gson.annotations.SerializedName;
 
 public class RemoveItemEvent extends WebSocketEvent {
-    public static final String ITEM_REMOVED = "ITEM_REMOVED";
+    public static final String EVENT_TYPE = "ITEM_REMOVED";
 
     @SerializedName("value")
     private int itemId;
 
     public RemoveItemEvent(int itemId) {
-        this.type = ITEM_REMOVED;
+        this.type = EVENT_TYPE;
         this.itemId = itemId;
     }
 
