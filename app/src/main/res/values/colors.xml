@@ -6,4 +6,7 @@
 
     <color name="teal">#03DAC6</color>
     <color name="purple">#6200EE</color>
+
+    <color name="overcast">#F1F1F2</color>
+    <color name="warmGray">#BCBABE</color>
 </resources>
