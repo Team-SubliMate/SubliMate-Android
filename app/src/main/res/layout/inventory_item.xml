@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/iv_inventory_item_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_marginBottom="@dimen/line_under_image_margin"
         android:adjustViewBounds="true"
         android:scaleType="fitStart"
@@ -38,6 +38,8 @@
         android:id="@+id/tv_inventory_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxLength="20"
+        android:maxLines="1"
         android:ellipsize="end"
         android:textAlignment="textStart"
         android:textStyle="bold"
@@ -57,7 +59,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        android:textAlignment="textEnd"
         tools:text="2" />
 
 </android.support.constraint.ConstraintLayout>

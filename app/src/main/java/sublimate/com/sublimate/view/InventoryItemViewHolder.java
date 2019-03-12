@@ -38,6 +38,9 @@ public class InventoryItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setName(String text) {
+        if (text.length() > 20) {
+            text = text.substring(0, 17) + "...";
+        }
         itemNameTV.setText(text);
     }
 
