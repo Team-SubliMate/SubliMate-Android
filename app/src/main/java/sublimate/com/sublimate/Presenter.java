@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 
 import okhttp3.WebSocket;
 import sublimate.com.sublimate.json.AddItemEvent;
+import sublimate.com.sublimate.json.FlowErrorEvent;
 import sublimate.com.sublimate.json.InventoryItem;
 import sublimate.com.sublimate.json.ManualItemEvent;
 import sublimate.com.sublimate.json.RemoveItemEvent;
@@ -103,5 +104,11 @@ public class Presenter implements PresenterContract, WebSocketEventHandlerContra
     public void onTieBreakerEvent(final TieBreakerEvent event) {
         int[] itemIds = event.getItemIds();
         view.showTieBreakerDialog(itemIds);
+    }
+
+    @Override
+    public void onFlowErrorEvent(FlowErrorEvent event) {
+        String message = event.getMessage();
+        view.showFlowErrorDialog(message);
     }
 }

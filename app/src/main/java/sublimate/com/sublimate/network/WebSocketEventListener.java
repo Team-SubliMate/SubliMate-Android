@@ -10,6 +10,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 import sublimate.com.sublimate.json.AddItemEvent;
+import sublimate.com.sublimate.json.FlowErrorEvent;
 import sublimate.com.sublimate.json.RemoveItemEvent;
 import sublimate.com.sublimate.json.TieBreakerEvent;
 import sublimate.com.sublimate.json.UpdateItemEvent;
@@ -59,10 +60,13 @@ public class WebSocketEventListener extends WebSocketListener {
                         UpdateItemEvent updateItemEvent = gson.fromJson(text, UpdateItemEvent.class);
                         handler.onUpdateItemEvent(updateItemEvent);
                         break;
-                    case TieBreakerEvent.WHICH_ITEM_REMOVED:
+                    case TieBreakerEvent.EVENT_TYPE:
                         TieBreakerEvent tieBreakerEvent = gson.fromJson(text, TieBreakerEvent.class);
                         handler.onTieBreakerEvent(tieBreakerEvent);
                         break;
+                    case FlowErrorEvent.EVENT_TYPE:
+                        FlowErrorEvent flowErrorEvent = gson.fromJson(text, FlowErrorEvent.class);
+                        handler.onFlowErrorEvent(flowErrorEvent);
                     default:
                         break;
                 }

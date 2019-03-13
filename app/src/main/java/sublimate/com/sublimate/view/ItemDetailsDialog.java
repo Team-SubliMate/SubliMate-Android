@@ -27,14 +27,16 @@ public class ItemDetailsDialog extends Dialog {
         TextView itemExpirationTV = findViewById(R.id.tv_inventory_item_expiration);
 
         // Set values
-        Glide.with(context)
-                .load(item.getImageUrl())
-                .fitCenter()
-                .into(itemImageIV);
+        if (item.getImageUrl() != null) {
+            Glide.with(context)
+                    .load(item.getImageUrl())
+                    .fitCenter()
+                    .into(itemImageIV);
+        }
         String titleText = item.getName();
         String weightText = context.getString(R.string.item_details_weight, item.getWeight());
         String quantityText = context.getString(R.string.item_details_quantity, item.getQuantity());
-        String expirationText = item.getExpiration();
+        String expirationText = context.getString(R.string.item_details_expiration, item.getExpiration());
 
         itemTitleTV.setText(titleText);
         itemWeightTV.setText(weightText);

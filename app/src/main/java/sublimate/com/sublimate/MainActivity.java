@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
     private Toast toast;
     private Dialog manualAddDialog;
     private Dialog tieBreakerDialog;
+    private Dialog flowErrorDialog;
 
     private Callback<InventoryServiceResponse> inventoryCallback;
     private InventoryService inventoryService;
@@ -357,5 +359,24 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
     public void showItemDetails(InventoryItem item) {
         Dialog itemDetailsDialog = new ItemDetailsDialog(this, item);
         itemDetailsDialog.show();
+    }
+
+    @Override
+    public void showFlowErrorDialog(String message) {
+        if (flowErrorDialog != null) {
+            flowErrorDialog.dismiss();
+        }
+
+        flowErrorDialog = new AlertDialog.Builder(this)
+                .setTitle("Error!")
+                .setMessage(message)
+                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.error);
+        mp.start();
     }
 }

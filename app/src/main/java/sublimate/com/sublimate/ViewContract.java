@@ -9,4 +9,5 @@ public interface ViewContract {
     void updateInventoryItem(int itemId, int quantity);
     void showTieBreakerDialog(int[] itemIds);
     void showItemDetails(InventoryItem item);
+    void showFlowErrorDialog(String message);
 }
