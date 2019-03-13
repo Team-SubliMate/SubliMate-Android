@@ -63,4 +63,8 @@ public class InventoryItem {
     public String getImageUrl() {
         return this.imageUrl;
     }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

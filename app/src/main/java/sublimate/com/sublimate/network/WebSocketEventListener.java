@@ -1,5 +1,6 @@
 package sublimate.com.sublimate.network;
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -8,10 +9,13 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import sublimate.com.sublimate.MainActivity;
+import sublimate.com.sublimate.PresenterContract;
 import sublimate.com.sublimate.json.AddItemEvent;
 import sublimate.com.sublimate.json.RemoveItemEvent;
 import sublimate.com.sublimate.json.TieBreakerEvent;
 import sublimate.com.sublimate.json.TieBreakerEventResponse;
+import sublimate.com.sublimate.json.UpdateItemEvent;
 import sublimate.com.sublimate.json.WebSocketEvent;
 
 public class WebSocketEventListener extends WebSocketListener {
@@ -19,9 +23,11 @@ public class WebSocketEventListener extends WebSocketListener {
 
     public static final String TAG = WebSocketEventListener.class.getSimpleName();
 
-    private WebSocketEventHandler handler;
+    private Activity view;
+    private WebSocketEventHandlerContract handler;
 
-    public WebSocketEventListener(WebSocketEventHandler handler) {
+    public WebSocketEventListener(Activity view, WebSocketEventHandlerContract handler) {
+        this.view = view;
         this.handler = handler;
     }
 
@@ -36,32 +42,36 @@ public class WebSocketEventListener extends WebSocketListener {
     }
 
     /** Invoked when a text (type {@code 0x1}) message has been received. */
-    public void onMessage(WebSocket webSocket, String text) {
-        Gson gson = new Gson();
+    public void onMessage(WebSocket webSocket, final String text) {
+        view.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Gson gson = new Gson();
 
-        WebSocketEvent event = gson.fromJson(text, WebSocketEvent.class);
+                WebSocketEvent event = gson.fromJson(text, WebSocketEvent.class);
+                switch (event.getType()) {
+                    case AddItemEvent.EVENT_TYPE:
+                        AddItemEvent addItemEvent = gson.fromJson(text, AddItemEvent.class);
+                        handler.onAddItemEvent(addItemEvent);
+                        break;
+                    case RemoveItemEvent.EVENT_TYPE:
+                        RemoveItemEvent removeItemEvent = gson.fromJson(text, RemoveItemEvent.class);
+                        handler.onRemoveItemEvent(removeItemEvent);
+                        break;
+                    case UpdateItemEvent.EVENT_TYPE:
+                        UpdateItemEvent updateItemEvent = gson.fromJson(text, UpdateItemEvent.class);
+                        handler.onUpdateItemEvent(updateItemEvent);
+                        break;
+                    case TieBreakerEvent.WHICH_ITEM_REMOVED:
+                        TieBreakerEvent tieBreakerEvent = gson.fromJson(text, TieBreakerEvent.class);
+                        handler.onTieBreakerEvent(tieBreakerEvent);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
-        switch (event.getType()) {
-            case RemoveItemEvent.EVENT_TYPE:
-                RemoveItemEvent removeItemEvent = gson.fromJson(text, RemoveItemEvent.class);
-                handler.onRemoveItemEvent(removeItemEvent);
-                break;
-            case TieBreakerEvent.WHICH_ITEM_REMOVED:
-                TieBreakerEvent tieBreakerEvent = gson.fromJson(text, TieBreakerEvent.class);
-                int itemId = handler.onTieBreakerEvent(tieBreakerEvent, webSocket);
-                TieBreakerEventResponse eventResponse = new TieBreakerEventResponse(itemId);
-
-                // TODO: FIX
-//                String response = gson.toJson(eventResponse, TieBreakerEventResponse.class);
-//                webSocket.send(response);
-                break;
-            case AddItemEvent.EVENT_TYPE:
-                AddItemEvent addItemEvent = gson.fromJson(text, AddItemEvent.class);
-                handler.onAddItemEvent(addItemEvent);
-                break;
-            default:
-                break;
-        }
 
         Log.d(TAG, "Received message: " + text);
     }

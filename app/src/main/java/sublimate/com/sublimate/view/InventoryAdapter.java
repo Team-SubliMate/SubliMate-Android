@@ -90,30 +90,39 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
     }
 
     public void setInventoryItems(List<InventoryItem> items) {
+        inventoryItems.clear();
         inventoryItems.addAll(items);
         notifyDataSetChanged();
     }
 
     public void addInventoryItem(InventoryItem item) {
         inventoryItems.add(item);
-        notifyItemInserted(inventoryItems.size() - 1);
-    }
-
-    public void resetInventoryItems() {
-        inventoryItems.clear();
         notifyDataSetChanged();
     }
 
-    public void removeItemById(int id) {
+    public void removeItem(int id) {
         int itemPosition = findItemById(id);
-        InventoryItem removed = inventoryItems.remove(itemPosition);
 
-        if (removed != null) {
-            notifyItemRemoved(itemPosition);
+        if (itemPosition == -1) {
+            return;
         }
+
+        inventoryItems.remove(itemPosition);
+        notifyDataSetChanged();
     }
 
-    // TODO: REMOVE
+    public void updateItemQuantity(int id, int quantity) {
+        int itemPosition = findItemById(id);
+
+        if (itemPosition == -1) {
+            return;
+        }
+
+        InventoryItem item = inventoryItems.get(itemPosition);
+        item.setQuantity(quantity);
+        notifyDataSetChanged();
+    }
+
     public InventoryItem getItemById(int id) {
         for (int i = 0; i < inventoryItems.size(); i++) {
             InventoryItem item = inventoryItems.get(i);

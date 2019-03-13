@@ -19,13 +19,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,7 +41,6 @@ import retrofit2.Response;
 import sublimate.com.sublimate.json.InventoryItem;
 import sublimate.com.sublimate.json.InventoryServiceResponse;
 import sublimate.com.sublimate.network.InventoryService;
-import sublimate.com.sublimate.network.WebSocketEventHandler;
 import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
 import sublimate.com.sublimate.view.ManualAddDialog;
@@ -78,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
 
         presenter = new Presenter(this);
         initView();
-        initTieBreakerDialog(); // TODO: Clean up
         initHTTP();
         initWS();
 
@@ -199,8 +202,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
 
         // Set up WS
         Request request = new Request.Builder().url(prefs.getString(WEBSOCKET_ADDRESS, WEBSOCKET_URL)).build();
-        WebSocketEventHandler handler = new WebSocketEventHandler(inventoryAdapter, tieBreakerDialog);
-        WebSocketEventListener listener = new WebSocketEventListener(handler);
+        WebSocketEventListener listener = new WebSocketEventListener(this, presenter);
 
         client = new OkHttpClient();
         webSocket = client.newWebSocket(request, listener);
@@ -284,17 +286,69 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
         showContent();
     }
 
-    private void initTieBreakerDialog() {
-        if (tieBreakerDialog == null) {
-            tieBreakerDialog = new Dialog(this);
-            tieBreakerDialog.setContentView(R.layout.tiebreaker_dialog);
-            tieBreakerDialog.setTitle(R.string.tiebreaker_dialog_title);
-        }
-    }
-
     @Override
     public void showToast(String message) {
         toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    @Override
+    public void addInventoryItem(InventoryItem item) {
+        frequentItemsCache.put(item.getItemId(), item);
+        frequentAdapter.setInventoryItems(new ArrayList<>(frequentItemsCache.snapshot().values()));
+        inventoryAdapter.addInventoryItem(item);
+    }
+
+    @Override
+    public void removeInventoryItem(int itemId) {
+        frequentItemsCache.remove(itemId);
+        frequentAdapter.setInventoryItems(new ArrayList<>(frequentItemsCache.snapshot().values()));
+        inventoryAdapter.removeItem(itemId);
+    }
+
+    @Override
+    public void updateInventoryItem(int itemId, int quantity) {
+        frequentAdapter.updateItemQuantity(itemId, quantity);
+        inventoryAdapter.updateItemQuantity(itemId, quantity);
+    }
+
+    @Override
+    public void showTieBreakerDialog(final int[] itemIds) {
+        final MainActivity context = this;
+
+        if (tieBreakerDialog == null) {
+            tieBreakerDialog = new Dialog(context);
+            tieBreakerDialog.setContentView(R.layout.tiebreaker_dialog);
+            tieBreakerDialog.setTitle(R.string.tiebreaker_dialog_title);
+        }
+
+        ArrayList<String> choiceNames = new ArrayList<>();
+
+        final Spinner dropdown = tieBreakerDialog.findViewById(R.id.choices);
+        Button dialogButton = tieBreakerDialog.findViewById(R.id.button_confirm);
+
+        final Map<String, Integer> nameToIdMap = new HashMap<>();
+
+        // Add choices
+        for (int itemId : itemIds) {
+            String name = inventoryAdapter.getItemById(itemId).getName();
+            nameToIdMap.put(name, itemId);
+            choiceNames.add(name);
+        }
+
+        dropdown.setAdapter(new ArrayAdapter<>(tieBreakerDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, choiceNames));
+
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String text = dropdown.getSelectedItem().toString();
+                int removeId = nameToIdMap.get(text);
+
+                presenter.sendTieBreakerResponse(removeId);
+                tieBreakerDialog.dismiss();
+            }
+        });
+
+        tieBreakerDialog.show();
     }
 }
