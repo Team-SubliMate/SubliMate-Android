@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/default_margin"
     android:padding="@dimen/inventory_item_padding"
-    android:background="@drawable/border"
+    android:background="@drawable/item_border"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -15,7 +15,7 @@
         android:layout_height="150dp"
         android:layout_marginBottom="@dimen/line_under_image_margin"
         android:adjustViewBounds="true"
-        android:scaleType="fitStart"
+        android:scaleType="fitCenter"
         android:src="@drawable/default_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

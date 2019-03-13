@@ -43,6 +43,7 @@ import sublimate.com.sublimate.json.InventoryServiceResponse;
 import sublimate.com.sublimate.network.InventoryService;
 import sublimate.com.sublimate.network.WebSocketEventListener;
 import sublimate.com.sublimate.view.InventoryAdapter;
+import sublimate.com.sublimate.view.ItemDetailsDialog;
 import sublimate.com.sublimate.view.ManualAddDialog;
 import sublimate.com.sublimate.view.PreferencesActivity;
 
@@ -350,5 +351,11 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
         });
 
         tieBreakerDialog.show();
+    }
+
+    @Override
+    public void showItemDetails(InventoryItem item) {
+        Dialog itemDetailsDialog = new ItemDetailsDialog(this, item);
+        itemDetailsDialog.show();
     }
 }

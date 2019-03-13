@@ -9,12 +9,9 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
-import sublimate.com.sublimate.MainActivity;
-import sublimate.com.sublimate.PresenterContract;
 import sublimate.com.sublimate.json.AddItemEvent;
 import sublimate.com.sublimate.json.RemoveItemEvent;
 import sublimate.com.sublimate.json.TieBreakerEvent;
-import sublimate.com.sublimate.json.TieBreakerEventResponse;
 import sublimate.com.sublimate.json.UpdateItemEvent;
 import sublimate.com.sublimate.json.WebSocketEvent;
 

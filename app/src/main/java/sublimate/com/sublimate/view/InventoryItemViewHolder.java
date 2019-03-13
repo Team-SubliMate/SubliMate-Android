@@ -70,4 +70,8 @@ public class InventoryItemViewHolder extends RecyclerView.ViewHolder {
     public void setOnLongClickListener(View.OnLongClickListener listener) {
         this.inventoryItemLayout.setOnLongClickListener(listener);
     }
+
+    public void setOnClickListener(View.OnClickListener listener) {
+        this.inventoryItemLayout.setOnClickListener(listener);
+    }
 }

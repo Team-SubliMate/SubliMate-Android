@@ -22,6 +22,11 @@
     <string name="tiebreaker_dialog_title">Tiebreaker</string>
     <string name="OK">OK</string>
 
+    <!-- Item Details Dialog -->
+    <string name="item_details_weight">Weight: %1$.2f</string>
+    <string name="item_details_quantity">Quantity: %1$d</string>
+    <string name="item_details_expiration">Expiration: %1$s</string>
+
     <!-- Preferences -->
     <string name="preferences_use_mock_label">Use Mock:</string>
     <string name="preferences_websocket_ip_label">WebSocket Address:</string>

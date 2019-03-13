@@ -68,6 +68,11 @@ public class Presenter implements PresenterContract, WebSocketEventHandlerContra
     }
 
     @Override
+    public void showItemDetails(InventoryItem item) {
+        view.showItemDetails(item);
+    }
+
+    @Override
     public void showToast(String message) {
         view.showToast(message);
     }

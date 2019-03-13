@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/overcast">
+
+    <ImageView
+        android:id="@+id/iv_inventory_item_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        android:src="@drawable/default_image"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding">
+
+        <TextView
+            android:id="@+id/tv_inventory_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/default_dialog_title_text_size"
+            tools:text="Item Name"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:weightSum="1">
+                <TextView
+                    android:id="@+id/tv_inventory_item_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    tools:text="Weight: 400g"/>
+                <TextView
+                    android:id="@+id/tv_inventory_item_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    tools:text="Quantity: 4"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_inventory_item_expiration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Expires: Wednesday March 20, 2019"/>
+    </LinearLayout>
+</LinearLayout>

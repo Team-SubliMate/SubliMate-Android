@@ -21,6 +21,9 @@ public class InventoryItem {
     @SerializedName("imgurl")
     private String imageUrl;
 
+    @SerializedName("bestBefore")
+    private String expiration;
+
     public InventoryItem(String name) {
         this.name = name;
     }
@@ -66,5 +69,9 @@ public class InventoryItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getExpiration() {
+        return this.expiration;
     }
 }

@@ -64,6 +64,13 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
                 return true;
             }
         });
+
+        holder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.showItemDetails(item);
+            }
+        });
     }
 
     @Override

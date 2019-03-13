@@ -8,6 +8,7 @@ public interface PresenterContract {
     void stopHandlingEvents();
     void startHandlingEvents();
     void sendTieBreakerResponse(int itemId);
+    void showItemDetails(InventoryItem item);
 
     void showToast(String message);
 }

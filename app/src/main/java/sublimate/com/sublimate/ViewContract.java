@@ -8,4 +8,5 @@ public interface ViewContract {
     void removeInventoryItem(int itemId);
     void updateInventoryItem(int itemId, int quantity);
     void showTieBreakerDialog(int[] itemIds);
+    void showItemDetails(InventoryItem item);
 }
