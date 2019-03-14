@@ -21,7 +21,7 @@ public class InventoryItem {
     @SerializedName("imgurl")
     private String imageUrl;
 
-    @SerializedName("bestBefore")
+    @SerializedName("bestbefore")
     private String expiration;
 
     public InventoryItem(String name) {

@@ -1,56 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/overcast">
+    android:background="@android:color/white">
 
     <ImageView
         android:id="@+id/iv_inventory_item_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitStart"
         android:adjustViewBounds="true"
-        android:src="@drawable/default_image"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_inventory_item_name"
+        android:src="@drawable/default_image" />
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_inventory_item_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/tv_inventory_item_expiration"
+        android:background="@color/overcast"/>
+
+    <TextView
+        android:id="@+id/tv_inventory_item_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/default_padding">
+        android:textSize="@dimen/default_dialog_title_text_size"
+        android:layout_margin="@dimen/default_margin"
+        app:layout_constraintTop_toBottomOf="@id/iv_inventory_item_image"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Item Name" />
 
-        <TextView
-            android:id="@+id/tv_inventory_item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/default_dialog_title_text_size"
-            tools:text="Item Name"/>
+    <TextView
+        android:id="@+id/tv_inventory_item_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        app:layout_constraintTop_toBottomOf="@id/tv_inventory_item_name"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Weight: 400g" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:weightSum="1">
-                <TextView
-                    android:id="@+id/tv_inventory_item_weight"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    tools:text="Weight: 400g"/>
-                <TextView
-                    android:id="@+id/tv_inventory_item_quantity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    tools:text="Quantity: 4"/>
-        </LinearLayout>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
 
-        <TextView
-            android:id="@+id/tv_inventory_item_expiration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Expires: Wednesday March 20, 2019"/>
-    </LinearLayout>
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_inventory_item_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/tv_inventory_item_name"
+        tools:text="Quantity: 4" />
+
+    <TextView
+        android:id="@+id/tv_inventory_item_expiration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:paddingBottom="@dimen/default_padding"
+        app:layout_constraintTop_toBottomOf="@id/tv_inventory_item_weight"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Expires: Wednesday March 20, 2019" />
+</android.support.constraint.ConstraintLayout>

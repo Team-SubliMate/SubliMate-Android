@@ -2,9 +2,8 @@ package sublimate.com.sublimate.view;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,10 +29,10 @@ public class ItemDetailsDialog extends Dialog {
         if (item.getImageUrl() != null) {
             Glide.with(context)
                     .load(item.getImageUrl())
-                    .fitCenter()
+                    .centerInside()
                     .into(itemImageIV);
         }
-        String titleText = item.getName();
+        String titleText = item.getName() + "  ";
         String weightText = context.getString(R.string.item_details_weight, item.getWeight());
         String quantityText = context.getString(R.string.item_details_quantity, item.getQuantity());
         String expirationText = context.getString(R.string.item_details_expiration, item.getExpiration());
@@ -41,6 +40,9 @@ public class ItemDetailsDialog extends Dialog {
         itemTitleTV.setText(titleText);
         itemWeightTV.setText(weightText);
         itemQuantityTV.setText(quantityText);
-        itemExpirationTV.setText(expirationText);
+
+        if (item.getExpiration() != null) {
+            itemExpirationTV.setText(expirationText);
+        }
     }
 }

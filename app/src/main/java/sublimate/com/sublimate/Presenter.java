@@ -41,8 +41,9 @@ public class Presenter implements PresenterContract, WebSocketEventHandlerContra
 
     @Override
     public void removeItem(int itemId) {
-        RemoveItemEvent removeItemEvent = new RemoveItemEvent(itemId);
-        String itemJson = gson.toJson(removeItemEvent, RemoveItemEvent.class);
+        // It's tie breaker response because backend is lazy
+        TieBreakerEventResponse removeItemEvent = new TieBreakerEventResponse(itemId);
+        String itemJson = gson.toJson(removeItemEvent, TieBreakerEventResponse.class);
         sendEvent(itemJson);
     }
 
