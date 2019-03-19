@@ -118,7 +118,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
         notifyDataSetChanged();
     }
 
-    public void updateItemQuantity(int id, int quantity) {
+    public void updateItem(int id, int quantity, double weight) {
         int itemPosition = findItemById(id);
 
         if (itemPosition == -1) {
@@ -127,6 +127,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
 
         InventoryItem item = inventoryItems.get(itemPosition);
         item.setQuantity(quantity);
+        item.setWeight(weight);
         notifyDataSetChanged();
     }
 

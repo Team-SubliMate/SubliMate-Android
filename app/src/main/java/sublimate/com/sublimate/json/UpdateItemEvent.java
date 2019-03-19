@@ -11,11 +11,18 @@ public class UpdateItemEvent extends WebSocketEvent {
     @SerializedName("quantity")
     private int quantity;
 
+    @SerializedName("weight")
+    private double weight;
+
     public int getItemId() {
         return itemId;
     }
 
     public int getItemQuantity() {
         return quantity;
+    }
+
+    public double getItemWeight() {
+        return weight;
     }
 }

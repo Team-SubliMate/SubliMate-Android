@@ -23,10 +23,12 @@
 
     <!-- Tiebreaker Dialog -->
     <string name="tiebreaker_dialog_title">Tiebreaker</string>
+    <string name="tiebreaker_dialog_text">Please select the item you removed from the dropdown below.</string>
+    <string name="tiebreaker_dialog_dropdown_text">Items:</string>
     <string name="OK">OK</string>
 
     <!-- Item Details Dialog -->
-    <string name="item_details_weight">Weight: %1$.2f</string>
+    <string name="item_details_weight">Weight: %1$dg</string>
     <string name="item_details_quantity">Quantity: %1$d</string>
     <string name="item_details_expiration">Expiration: %1$s</string>
 

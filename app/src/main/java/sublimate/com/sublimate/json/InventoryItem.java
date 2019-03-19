@@ -67,11 +67,15 @@ public class InventoryItem {
         return this.imageUrl;
     }
 
+    public String getExpiration() {
+        return this.expiration;
+    }
+
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public String getExpiration() {
-        return this.expiration;
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 }

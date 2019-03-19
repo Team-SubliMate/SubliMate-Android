@@ -327,9 +327,11 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
     }
 
     @Override
-    public void updateInventoryItem(int itemId, int quantity) {
-        frequentAdapter.updateItemQuantity(itemId, quantity);
-        inventoryAdapter.updateItemQuantity(itemId, quantity);
+    public void updateInventoryItem(int itemId, int quantity, double weight) {
+        frequentAdapter.updateItem(itemId, quantity, weight);
+        inventoryAdapter.updateItem(itemId, quantity, weight);
+
+        hideManualAddWait(); // Hides it if needed
     }
 
     @Override
@@ -356,7 +358,8 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
             choiceNames.add(name);
         }
 
-        dropdown.setAdapter(new ArrayAdapter<>(tieBreakerDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, choiceNames));
+        ArrayAdapter adapter = new ArrayAdapter<>(tieBreakerDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, choiceNames);
+        dropdown.setAdapter(adapter);
 
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -117,7 +117,7 @@ public class Presenter implements PresenterContract, WebSocketEventHandlerContra
 
     @Override
     public void onUpdateItemEvent(UpdateItemEvent event) {
-        view.updateInventoryItem(event.getItemId(), event.getItemQuantity());
+        view.updateInventoryItem(event.getItemId(), event.getItemQuantity(), event.getItemWeight());
     }
 
     @Override

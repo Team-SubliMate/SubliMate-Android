@@ -8,19 +8,18 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please select the item you removed from the dropdown below."/>
+        android:text="@string/tiebreaker_dialog_text"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
-        android:weightSum="2">
+        android:layout_marginTop="@dimen/default_margin">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Items: "/>
+            android:text="@string/tiebreaker_dialog_dropdown_text"
+            android:layout_marginEnd="@dimen/default_margin"/>
         <Spinner android:id="@+id/choices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

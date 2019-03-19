@@ -6,7 +6,7 @@ public interface ViewContract {
     void addInventoryItem(InventoryItem item);
     void removeInventoryItem(int itemId);
     void resetInventory();
-    void updateInventoryItem(int itemId, int quantity);
+    void updateInventoryItem(int itemId, int quantity, double weight);
 
     void showTieBreakerDialog(int[] itemIds);
     void showItemDetails(InventoryItem item);

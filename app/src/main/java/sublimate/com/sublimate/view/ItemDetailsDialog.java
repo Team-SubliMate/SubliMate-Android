@@ -33,7 +33,7 @@ public class ItemDetailsDialog extends Dialog {
                     .into(itemImageIV);
         }
         String titleText = item.getName() + "  ";
-        String weightText = context.getString(R.string.item_details_weight, item.getWeight());
+        String weightText = context.getString(R.string.item_details_weight, (int) item.getWeight());
         String quantityText = context.getString(R.string.item_details_quantity, item.getQuantity());
         String expirationText = context.getString(R.string.item_details_expiration, item.getExpiration());
 
