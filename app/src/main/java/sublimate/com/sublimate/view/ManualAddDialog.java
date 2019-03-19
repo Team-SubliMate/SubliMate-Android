@@ -15,7 +15,7 @@ import sublimate.com.sublimate.R;
 import sublimate.com.sublimate.json.InventoryItem;
 
 public class ManualAddDialog extends Dialog {
-    PresenterContract presenter;
+    private PresenterContract presenter;
 
     public ManualAddDialog(@NonNull Context context, final PresenterContract presenter) {
         super(context);

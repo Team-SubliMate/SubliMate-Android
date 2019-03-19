@@ -23,7 +23,7 @@
 
     <!-- Tiebreaker Dialog -->
     <string name="tiebreaker_dialog_title">Tiebreaker</string>
-    <string name="tiebreaker_dialog_text">Please select the item you removed from the dropdown below.</string>
+    <string name="tiebreaker_dialog_text">Please select the item you removed from choices below.</string>
     <string name="tiebreaker_dialog_dropdown_text">Items:</string>
     <string name="OK">OK</string>
 

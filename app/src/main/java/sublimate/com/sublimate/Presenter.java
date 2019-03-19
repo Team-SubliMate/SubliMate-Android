@@ -76,6 +76,8 @@ public class Presenter implements PresenterContract, WebSocketEventHandlerContra
         TieBreakerEventResponse eventResponse = new TieBreakerEventResponse(itemId);
         String response =  gson.toJson(eventResponse, TieBreakerEventResponse.class);
         webSocket.send(response);
+
+        view.hideTieBreakerDialog();
     }
 
     @Override
