@@ -55,7 +55,7 @@ import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_ADDRESS
 import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_URL;
 
 public class MainActivity extends AppCompatActivity implements ViewContract {
-    private static int MAX_CACHE_SIZE = 5;
+    private static final int MAX_CACHE_SIZE = 5;
 
     private Presenter presenter;
 
@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
             case R.id.menu_rearrange:
                 if (item.getTitle().equals(getString(R.string.menu_rearrange))) {
                     new AlertDialog.Builder(this)
-                            .setTitle("Rearrange Contents")
-                            .setMessage("You're about to stop the fridge from responding to item changes in order to rearrange the fridge contents. Are you sure you want to proceed?")
+                            .setTitle(R.string.rearrange_dialog_title)
+                            .setMessage(R.string.rearrange_dialog_text)
                             .setPositiveButton(R.string.menu_rearrange, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
         }
 
         flowErrorDialog = new AlertDialog.Builder(this)
-                .setTitle("Error!")
+                .setTitle(R.string.error_message)
                 .setMessage(message)
                 .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                     @Override
@@ -402,8 +402,8 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
     @Override
     public void showManualAddWait() {
         manualAddWaitDialog = new AlertDialog.Builder(this)
-                .setTitle("Please Wait")
-                .setMessage("Please Wait")
+                .setTitle(R.string.add_dialog_wait_title)
+                .setMessage(R.string.add_dialog_wait_text)
                 .show();
 
         Window window = manualAddWaitDialog.getWindow();

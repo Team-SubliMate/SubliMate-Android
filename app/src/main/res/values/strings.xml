@@ -18,6 +18,8 @@
     <string name="add_dialog_item_name">Item Name: </string>
     <string name="add_dialog_item_quantity">Quantity: </string>
     <string name="add_dialog_add_item">Add</string>
+    <string name="add_dialog_wait_title">Weighting for Item…</string>
+    <string name="add_dialog_wait_text">Please put the entered item into the fridge.</string>
 
     <!-- Tiebreaker Dialog -->
     <string name="tiebreaker_dialog_title">Tiebreaker</string>
@@ -27,6 +29,10 @@
     <string name="item_details_weight">Weight: %1$.2f</string>
     <string name="item_details_quantity">Quantity: %1$d</string>
     <string name="item_details_expiration">Expiration: %1$s</string>
+
+    <!-- Fridge Rearrange Dialog -->
+    <string name="rearrange_dialog_title">Rearrange Contents</string>
+    <string name="rearrange_dialog_text">You are about to stop the fridge from responding to item changes in order to rearrange the fridge contents. Are you sure you want to proceed?</string>
 
     <!-- Preferences -->
     <string name="preferences_use_mock_label">Use Mock:</string>
