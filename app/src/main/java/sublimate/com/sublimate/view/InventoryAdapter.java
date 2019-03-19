@@ -141,4 +141,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryItemViewHold
 
         return null;
     }
+
+    public void resetInventory() {
+        inventoryItems.clear();
+        notifyDataSetChanged();
+    }
 }

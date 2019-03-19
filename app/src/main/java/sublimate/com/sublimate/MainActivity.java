@@ -20,6 +20,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
     private FloatingActionButton inventoryActionButton;
     private Toast toast;
     private Dialog manualAddDialog;
+    private Dialog manualAddWaitDialog;
     private Dialog tieBreakerDialog;
     private Dialog flowErrorDialog;
 
@@ -130,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
                 }
 
                 return false;
+            case R.id.menu_reset:
+                presenter.sendResetEvent();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -300,6 +306,10 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
         frequentItemsCache.put(item.getItemId(), item);
         frequentAdapter.setInventoryItems(new ArrayList<>(frequentItemsCache.snapshot().values()));
         inventoryAdapter.addInventoryItem(item);
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.success);
+        mp.start();
+
+        hideManualAddWait(); // Hides it if needed
     }
 
     @Override
@@ -307,6 +317,13 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
         frequentItemsCache.remove(itemId);
         frequentAdapter.setInventoryItems(new ArrayList<>(frequentItemsCache.snapshot().values()));
         inventoryAdapter.removeItem(itemId);
+    }
+
+    @Override
+    public void resetInventory() {
+        frequentItemsCache.evictAll();
+        frequentAdapter.resetInventory();
+        inventoryAdapter.resetInventory();
     }
 
     @Override
@@ -353,6 +370,8 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
         });
 
         tieBreakerDialog.show();
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.tiebreaker);
+        mp.start();
     }
 
     @Override
@@ -378,5 +397,26 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
                 }).show();
         MediaPlayer mp = MediaPlayer.create(this, R.raw.error);
         mp.start();
+    }
+
+    @Override
+    public void showManualAddWait() {
+        manualAddWaitDialog = new AlertDialog.Builder(this)
+                .setTitle("Please Wait")
+                .setMessage("Please Wait")
+                .show();
+
+        Window window = manualAddWaitDialog.getWindow();
+        if (window != null) {
+            window.setDimAmount(0.5f);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
+    }
+
+    @Override
+    public void hideManualAddWait() {
+        if (manualAddWaitDialog != null) {
+            manualAddWaitDialog.hide();
+        }
     }
 }

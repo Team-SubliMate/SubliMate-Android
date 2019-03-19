@@ -9,6 +9,8 @@ import sublimate.com.sublimate.json.FlowErrorEvent;
 import sublimate.com.sublimate.json.InventoryItem;
 import sublimate.com.sublimate.json.ManualItemEvent;
 import sublimate.com.sublimate.json.RemoveItemEvent;
+import sublimate.com.sublimate.json.ResetAckEvent;
+import sublimate.com.sublimate.json.ResetEvent;
 import sublimate.com.sublimate.json.StartHandlingEvent;
 import sublimate.com.sublimate.json.StopHandlingEvent;
 import sublimate.com.sublimate.json.TieBreakerEvent;
@@ -48,6 +50,13 @@ public class Presenter implements PresenterContract, WebSocketEventHandlerContra
     }
 
     @Override
+    public void sendResetEvent() {
+        ResetEvent resetEvent = new ResetEvent();
+        String itemJson = gson.toJson(resetEvent, ResetEvent.class);
+        sendEvent(itemJson);
+    }
+
+    @Override
     public void stopHandlingEvents() {
         StopHandlingEvent stopHandlingEvent = new StopHandlingEvent();
         String itemJson = gson.toJson(stopHandlingEvent, StopHandlingEvent.class);
@@ -75,6 +84,11 @@ public class Presenter implements PresenterContract, WebSocketEventHandlerContra
     }
 
     @Override
+    public void showManualAddWait() {
+        view.showManualAddWait();
+    }
+
+    @Override
     public void showToast(String message) {
         view.showToast(message);
     }
@@ -94,6 +108,11 @@ public class Presenter implements PresenterContract, WebSocketEventHandlerContra
     @Override
     public void onRemoveItemEvent(RemoveItemEvent event) {
         view.removeInventoryItem(event.getItemId());
+    }
+
+    @Override
+    public void onResetAckEvent(ResetAckEvent event) {
+        view.resetInventory();
     }
 
     @Override

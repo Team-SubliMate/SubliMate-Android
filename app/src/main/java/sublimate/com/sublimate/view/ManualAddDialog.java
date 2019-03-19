@@ -43,7 +43,7 @@ public class ManualAddDialog extends Dialog {
                 InventoryItem item = new InventoryItem(42, itemText, itemQuantity);
 
                 presenter.addItem(item);
-                presenter.showToast("The item \"" + item.getName() + "\" has been added.");
+                presenter.showManualAddWait();
 
                 dialogNameEditText.setText("");
                 dismiss();

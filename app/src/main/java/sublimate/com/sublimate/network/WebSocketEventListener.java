@@ -12,6 +12,7 @@ import okio.ByteString;
 import sublimate.com.sublimate.json.AddItemEvent;
 import sublimate.com.sublimate.json.FlowErrorEvent;
 import sublimate.com.sublimate.json.RemoveItemEvent;
+import sublimate.com.sublimate.json.ResetAckEvent;
 import sublimate.com.sublimate.json.TieBreakerEvent;
 import sublimate.com.sublimate.json.UpdateItemEvent;
 import sublimate.com.sublimate.json.WebSocketEvent;
@@ -55,6 +56,10 @@ public class WebSocketEventListener extends WebSocketListener {
                     case RemoveItemEvent.EVENT_TYPE:
                         RemoveItemEvent removeItemEvent = gson.fromJson(text, RemoveItemEvent.class);
                         handler.onRemoveItemEvent(removeItemEvent);
+                        break;
+                    case ResetAckEvent.EVENT_TYPE:
+                        ResetAckEvent resetAckEvent = gson.fromJson(text, ResetAckEvent.class);
+                        handler.onResetAckEvent(resetAckEvent);
                         break;
                     case UpdateItemEvent.EVENT_TYPE:
                         UpdateItemEvent updateItemEvent = gson.fromJson(text, UpdateItemEvent.class);

@@ -28,7 +28,7 @@
 
         <activity
             android:name=".view.PreferencesActivity"
-            android:label="@string/settings_name"
+            android:label="@string/menu_settings"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
