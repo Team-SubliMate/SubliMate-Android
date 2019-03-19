@@ -10,29 +10,10 @@
         android:layout_height="wrap_content"
         android:text="@string/tiebreaker_dialog_text"/>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_tiebreaker_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tiebreaker_dialog_dropdown_text"
-            android:layout_marginEnd="@dimen/default_margin"/>
-        <Spinner android:id="@+id/choices"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/button_confirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/OK"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/default_margin"/>
+        android:nestedScrollingEnabled="false"/>
 
 </LinearLayout>

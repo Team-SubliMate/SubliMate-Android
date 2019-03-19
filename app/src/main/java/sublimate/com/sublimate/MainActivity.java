@@ -49,6 +49,7 @@ import sublimate.com.sublimate.view.InventoryAdapter;
 import sublimate.com.sublimate.view.ItemDetailsDialog;
 import sublimate.com.sublimate.view.ManualAddDialog;
 import sublimate.com.sublimate.view.PreferencesActivity;
+import sublimate.com.sublimate.view.TieBreakerDialog;
 
 import static sublimate.com.sublimate.view.PreferencesActivity.USE_MOCK;
 import static sublimate.com.sublimate.view.PreferencesActivity.WEBSOCKET_ADDRESS;
@@ -336,45 +337,23 @@ public class MainActivity extends AppCompatActivity implements ViewContract {
 
     @Override
     public void showTieBreakerDialog(final int[] itemIds) {
-        final MainActivity context = this;
-
-        if (tieBreakerDialog == null) {
-            tieBreakerDialog = new Dialog(context);
-            tieBreakerDialog.setContentView(R.layout.tiebreaker_dialog);
-            tieBreakerDialog.setTitle(R.string.tiebreaker_dialog_title);
-        }
-
-        ArrayList<String> choiceNames = new ArrayList<>();
-
-        final Spinner dropdown = tieBreakerDialog.findViewById(R.id.choices);
-        Button dialogButton = tieBreakerDialog.findViewById(R.id.button_confirm);
-
-        final Map<String, Integer> nameToIdMap = new HashMap<>();
+        List<InventoryItem> items = new ArrayList<>();
 
         // Add choices
         for (int itemId : itemIds) {
-            String name = inventoryAdapter.getItemById(itemId).getName();
-            nameToIdMap.put(name, itemId);
-            choiceNames.add(name);
+            items.add(inventoryAdapter.getItemById(itemId));
         }
 
-        ArrayAdapter adapter = new ArrayAdapter<>(tieBreakerDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, choiceNames);
-        dropdown.setAdapter(adapter);
-
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String text = dropdown.getSelectedItem().toString();
-                int removeId = nameToIdMap.get(text);
-
-                presenter.sendTieBreakerResponse(removeId);
-                tieBreakerDialog.dismiss();
-            }
-        });
+        tieBreakerDialog = new TieBreakerDialog(this, presenter, items);
 
         tieBreakerDialog.show();
-        MediaPlayer mp = MediaPlayer.create(this, R.raw.tiebreaker);
-        mp.start();
+    }
+
+    @Override
+    public void hideTieBreakerDialog() {
+        if (tieBreakerDialog != null) {
+            tieBreakerDialog.dismiss();
+        }
     }
 
     @Override
